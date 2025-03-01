@@ -11,7 +11,7 @@ public class TomatoFactory : FarmableFactory
 {
     public override Seed CreateFarmableItem()
     {
-        return new Tomato();
+        return new TomatoSeed();
     }
 }
 
@@ -19,6 +19,6 @@ public class BlueberryFactory : FarmableFactory
 {
     public override Seed CreateFarmableItem()
     {
-        return new Blueberry();
+        return new BlueberrySeed();
     }
 }

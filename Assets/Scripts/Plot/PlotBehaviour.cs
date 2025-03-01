@@ -42,14 +42,14 @@ public class PlotBehaviour : MonoBehaviour
     private void ReadyToPlant()
     {
         CurrentState = PlotState.Empty;
+        _plotData.CurrentSeed = null;
         _soilRenderer.color = Color.white;
         _soilRenderer.sprite = _emptyPlot;
     }
     public void Plant()
     {
         if(CurrentState != PlotState.Empty) return;
-        _plotData.Plant(_farmableFactory.CreateFarmableItem());
-        if(!_plotData.CanPlant()) return;
+        if(!_plotData.Plant(_farmableFactory.CreateFarmableItem())) return;
         _soilRenderer.color = Color.grey;
         _soilRenderer.sprite = _haveSeedPlot;
         StartCoroutine(GrowingProgress());
@@ -66,6 +66,7 @@ public class PlotBehaviour : MonoBehaviour
     public void Harvest()
     {
         if(CurrentState != PlotState.Finish) return;
+        GameController.Instance.PlayerData.AddItemIntoInventory(_plotData.CurrentSeed.ProductPrefab.Name, 1);
         _soilRenderer.sprite = _emptyPlot;
         ReadyToPlant();
     }

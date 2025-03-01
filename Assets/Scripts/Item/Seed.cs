@@ -36,13 +36,13 @@ public class Seed : IFarmable
 }
 
 
-public class Tomato : Seed
+public class TomatoSeed : Seed
 {
     public override void Grow()
     {
         Debug.Log("Growing Tomato");
     }
-    public Tomato()
+    public TomatoSeed()
     {
         Type = SeedType.Tomato;
         Name = "TomatoSeed";
@@ -54,9 +54,9 @@ public class Tomato : Seed
         Sprite = Constant.TomatoSprite;
     }
 }
-public class Blueberry : Seed
+public class BlueberrySeed : Seed
 {
-    public Blueberry()
+    public BlueberrySeed()
     {
         Type = SeedType.Blueberry;
         Name = "BlueberrySeed";

@@ -17,12 +17,19 @@ public class GameController : MonoBehaviour
         else 
         { 
             Instance = this; 
-        } 
+        }
     }
     private void Start() {
+        PlayerData = new PlayerData();
+        PlayerData.AddCurrency(100);
+        PlayerData.AddItemIntoInventory(nameof(TomatoSeed), 1);
+        PlayerData.AddItemIntoInventory(nameof(BlueberrySeed), 2);
     }
     private void Update() {
-        
+        if(Input.GetKeyUp(KeyCode.Tab))
+        {
+            CheckingPlayerData();
+        }
     }
 
     public void SetPlayerData(PlayerData data)
@@ -30,6 +37,16 @@ public class GameController : MonoBehaviour
         if(data == null) return;
         this.PlayerData = data;
     }
+#if UNITY_EDITOR
+    public void CheckingPlayerData()
+    {
+        if(PlayerData == null) return;
+        Debug.Log($"Player curreny:{PlayerData.Currency}");
+        var invenData = PlayerData.Inventory;
+        foreach(KeyValuePair<string, int> item in invenData)
+            Debug.Log($"Item: {item.Key}, amount: {item.Value}");
+    }
+#endif
 }
 
 public static class SaveLoadJSON

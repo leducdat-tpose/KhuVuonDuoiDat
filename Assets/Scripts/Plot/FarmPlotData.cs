@@ -12,15 +12,13 @@ public class FarmPlotData
     public Seed CurrentSeed;
     // public float GrowthProgress;
     // public float GrowthRate;
-    
-    public bool CanPlant()
-    {
-        return isUnlocked && CurrentSeed != null;
-    }
 
-    public void Plant(Seed seed)
+    public bool Plant(Seed seed)
     {
+        if(!isUnlocked) return false;
+        if(!GameController.Instance.PlayerData.UseItemInInventory(seed.Name, 1)) return false;
         CurrentSeed = seed;
+        return true;
     }
     public void InitialiseDebug()
     {
