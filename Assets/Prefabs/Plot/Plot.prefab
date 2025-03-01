@@ -284,7 +284,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6251370366797544599}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.5, y: 3, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 0}
   m_ConstrainProportionsScale: 0
@@ -360,7 +360,7 @@ MonoBehaviour:
     PlotID: 
     GridPos: {x: 0, y: 0}
     UnlockCost: 0
-    isUnlocked: 0
+    isUnlocked: 1
   _soilRenderer: {fileID: 0}
   _plantRenderer: {fileID: 0}
   _emptyPlot: {fileID: 0}

@@ -12,7 +12,8 @@ public enum PlotState
 
 public class PlotBehaviour : MonoBehaviour
 {   
-    [field:SerializeField]public FarmPlotData PlotData{get;private set;}
+    [field:SerializeField]
+    public FarmPlotData PlotData{get;private set;}
     [Header("Propertiles")]
     [SerializeField]
     private SpriteRenderer _soilRenderer;
@@ -31,6 +32,7 @@ public class PlotBehaviour : MonoBehaviour
     {
         _soilRenderer = GetComponent<SpriteRenderer>();
         CurrentState = PlotState.Empty;
+        PlotData = new FarmPlotData();
         PlotData.InitialiseDebug();
     }
     private void Start() {
@@ -46,10 +48,11 @@ public class PlotBehaviour : MonoBehaviour
     public void Plant()
     {
         if(CurrentState != PlotState.Empty) return;
-        // if(!PlotData.CanPlant()) {
-        //     Debug.Log("Don't has seed or not buy yet!");
-        //     return;
-        // }
+        Debug.Log(PlotData.CanPlant());
+        if(!PlotData.CanPlant()) {
+            Debug.Log("Don't has seed or not buy yet!");
+            return;
+        }
         Debug.Log("Plant seed");
         _soilRenderer.color = Color.grey;
         StartCoroutine(GrowingProgress());
@@ -74,7 +77,7 @@ public class PlotBehaviour : MonoBehaviour
     
     private IEnumerator GrowingProgress()
     {
-        yield return new WaitForSecondsRealtime(3f);
+        yield return new WaitForSecondsRealtime(PlotData.CurrentSeed.DurationGrowth);
         ReadyToHarvest();
     }
 }

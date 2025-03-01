@@ -2,26 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Seed : MonoBehaviour, IFarmable
+public enum SeedType
 {
+    Tomato,
+    Blueberry,
+    Strawberry
+}
+[System.Serializable]
+public class Seed : IFarmable
+{
+    public string Name{get; set;}
     public Product ProductPrefab {get; set;}
 
-    public float DurationGrowth {get; set;} = 3f;
+    public float DurationGrowth {get; set;}
+    public SeedType Type{get; set;}
 
-    public void Initialise()
-    {
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        Initialise();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public Seed(){
+        this.Name = "TomatoSeed";
+        this.DurationGrowth = 3f;
+        this.Type = SeedType.Tomato;
+        ProductPrefab = new Product{
+            Name = "Tomato",
+            SellMoney = 100,
+        };
     }
 }

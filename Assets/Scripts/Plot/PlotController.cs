@@ -22,7 +22,7 @@ public class PlotController : MonoBehaviour
     }
 
     private void OnMouseDown() {
-        Debug.Log("mouse down");
+        if(_interactionCanvas.gameObject.activeSelf) return;
         if(EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             return;
         SetActiveUI(true);
