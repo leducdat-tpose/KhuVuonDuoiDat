@@ -30,7 +30,6 @@ public class PlotController : MonoBehaviour
 
     private void OnMouseExit() {
         if(!_interactionCanvas.gameObject.activeSelf) return;
-        Debug.Log("mouse exit");
         SetActiveUI(false);
     }
 

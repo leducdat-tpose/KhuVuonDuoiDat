@@ -12,14 +12,11 @@ public enum PlotState
 
 public class PlotBehaviour : MonoBehaviour
 {   
-    [field:SerializeField]
-    public FarmPlotData PlotData{get;private set;}
+    private FarmPlotData _plotData;
+    private FarmableFactory _farmableFactory;
     [Header("Propertiles")]
     [SerializeField]
     private SpriteRenderer _soilRenderer;
-    [SerializeField]
-    private SpriteRenderer _plantRenderer;
-    
     [SerializeField]
     private Sprite _emptyPlot;
     [SerializeField]
@@ -32,8 +29,11 @@ public class PlotBehaviour : MonoBehaviour
     {
         _soilRenderer = GetComponent<SpriteRenderer>();
         CurrentState = PlotState.Empty;
-        PlotData = new FarmPlotData();
-        PlotData.InitialiseDebug();
+        _plotData = new FarmPlotData();
+        _plotData.InitialiseDebug();
+        _farmableFactory = new BlueberryFactory();
+        _emptyPlot = _soilRenderer.sprite;
+        _haveSeedPlot = _soilRenderer.sprite;
     }
     private void Start() {
         Initialise();
@@ -42,19 +42,16 @@ public class PlotBehaviour : MonoBehaviour
     private void ReadyToPlant()
     {
         CurrentState = PlotState.Empty;
-        Debug.Log("Ready to plant");
         _soilRenderer.color = Color.white;
+        _soilRenderer.sprite = _emptyPlot;
     }
     public void Plant()
     {
         if(CurrentState != PlotState.Empty) return;
-        Debug.Log(PlotData.CanPlant());
-        if(!PlotData.CanPlant()) {
-            Debug.Log("Don't has seed or not buy yet!");
-            return;
-        }
-        Debug.Log("Plant seed");
+        _plotData.Plant(_farmableFactory.CreateFarmableItem());
+        if(!_plotData.CanPlant()) return;
         _soilRenderer.color = Color.grey;
+        _soilRenderer.sprite = _haveSeedPlot;
         StartCoroutine(GrowingProgress());
     }
 #endregion
@@ -63,13 +60,13 @@ public class PlotBehaviour : MonoBehaviour
     public void ReadyToHarvest()
     {
         CurrentState = PlotState.Finish;
-        Debug.Log("Ready to harvest");
-        _soilRenderer.color = Color.green;
+        _soilRenderer.color = Color.white;
+        _soilRenderer.sprite = Resources.Load<Sprite>(path:_plotData.CurrentSeed.Sprite);
     }
     public void Harvest()
     {
         if(CurrentState != PlotState.Finish) return;
-        Debug.Log("Harvest");
+        _soilRenderer.sprite = _emptyPlot;
         ReadyToPlant();
     }
 #endregion
@@ -77,7 +74,7 @@ public class PlotBehaviour : MonoBehaviour
     
     private IEnumerator GrowingProgress()
     {
-        yield return new WaitForSecondsRealtime(PlotData.CurrentSeed.DurationGrowth);
+        yield return new WaitForSecondsRealtime(_plotData.CurrentSeed.DurationGrowth);
         ReadyToHarvest();
     }
 }

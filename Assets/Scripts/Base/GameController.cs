@@ -9,7 +9,6 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance{get; private set;}
     public PlayerData PlayerData{get; private set;}
-    Seed seed;
     private void Awake() {
         if (Instance != null && Instance != this) 
         { 
@@ -21,10 +20,6 @@ public class GameController : MonoBehaviour
         } 
     }
     private void Start() {
-        PlayerData = new();
-        PlayerData.Money = 100;
-        seed = new();
-        PlayerData.Inventory.Add("tomato", seed);
     }
     private void Update() {
         

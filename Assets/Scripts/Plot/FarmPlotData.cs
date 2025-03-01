@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -11,7 +12,7 @@ public class FarmPlotData
     public Seed CurrentSeed;
     // public float GrowthProgress;
     // public float GrowthRate;
-
+    
     public bool CanPlant()
     {
         return isUnlocked && CurrentSeed != null;
@@ -24,7 +25,6 @@ public class FarmPlotData
     public void InitialiseDebug()
     {
         isUnlocked = true;
-        CurrentSeed = new Seed{ DurationGrowth = 3f};
     }
 
 }
