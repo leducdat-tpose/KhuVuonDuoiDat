@@ -35,7 +35,9 @@ public class PlotController : MonoBehaviour
 
     public void FarmSeed()
     {
-        _behaviour.Farm(DataManager.Instance.GetItem<Seed>("TomatoSeed"));
+        var animal = DataManager.Instance.GetItem<Animal>("Cow");
+        _behaviour.Farm(animal);
+        _behaviour.SetSpriteCollectProduct(DataManager.Instance.GetItemSprite(animal.Name));
         SetActiveUI(false);
     }
     public void Harvest()

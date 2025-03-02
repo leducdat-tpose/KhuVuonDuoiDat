@@ -13,6 +13,7 @@ public abstract class Item
     public string Name {get; protected set;}
     public string ItemSpriteName {get; protected set;}
     public ItemType Type {get; protected set;}
+    public int Value{get; protected set;}
 
     public abstract void LoadData(string[] rowData);
 }

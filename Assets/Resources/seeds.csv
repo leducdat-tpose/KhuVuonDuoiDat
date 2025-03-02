@@ -1,3 +1,4 @@
-Name,DurationGrowth,Product,SpriteName,Type
-TomatoSeed,3,Tomato,tomato,0
-BlueberrySeed,5,Blueberry,blueberry,0
+Type,Name,Value,DurationProgress,Product,SpriteName
+0,TomatoSeed,10,3,Tomato,tomato
+0,BlueberrySeed,20,5,Blueberry,blueberry
+1,Cow,100,10,Milk,tomato

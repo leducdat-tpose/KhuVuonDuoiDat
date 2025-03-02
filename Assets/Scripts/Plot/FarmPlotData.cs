@@ -9,15 +9,14 @@ public class FarmPlotData
     public string PlotID;
     public float UnlockCost;
     public bool isUnlocked;
-    public Item CurrentItem{get; private set;}
+    public IFarmable CurrentItem{get; private set;}
     // public float GrowthProgress;
     // public float GrowthRate;
 
     public bool CanFarm() => isUnlocked && CurrentItem == null;
 
-    public bool Farming(Item item)
+    public bool Farming(IFarmable item)
     {
-        if(item.Type != ItemType.Seed && item.Type != ItemType.Animal) return false;
         CurrentItem = item;
         return true;
     }

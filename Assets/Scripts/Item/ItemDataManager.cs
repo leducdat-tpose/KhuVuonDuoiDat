@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -10,13 +11,26 @@ public class ItemDataManager
 
     public virtual void ProcessCSVRow(string[] values)
     {
-        if(values.Length >= 5)
+        if(Enum.TryParse(values[0], out ItemType type))
         {
-            string name = values[0];
-            Seed seed = new Seed();
-            seed.LoadData(values);
-            itemDatabase.Add(name, seed);
+            if(type == ItemType.Seed)
+            if(values.Length >= 6)
+            {
+                string name = values[1];
+                Seed seed = new Seed();
+                seed.LoadData(values);
+                itemDatabase.Add(name, seed);
+            }
+            if(type == ItemType.Animal)
+            if(values.Length >= 6)
+            {
+                string name = values[1];
+                Animal animal = new Animal();
+                animal.LoadData(values);
+                itemDatabase.Add(name, animal);
+            }
         }
+        
     }
 
     public virtual void LoadItemsFromCSVFile(string filePath)

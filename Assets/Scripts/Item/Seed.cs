@@ -3,20 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Seed : Item
+public class Seed : Item, IFarmable
 {
-    public int DurationGrowth {get; private set;}
-    public string Product {get; private set;}
+    public float DurationProgress {get; set;}
+    public string Product {get; set;}
     public override void LoadData(string[] rowData)
     {
-        //Order: Name, DurationGrowth, Product, Sprite, Type
-        Name = rowData[0];
-        DurationGrowth = int.Parse(rowData[1]);
-        Product = rowData[2];
-        ItemSpriteName = rowData[3];
-        if(Enum.TryParse(rowData[4], out ItemType type))
+        //Order: Type, Name, Value, DurationProgress, Product, SpriteName
+
+        if(Enum.TryParse(rowData[0], out ItemType type))
         {
             Type = type;
         } else Type = ItemType.Seed;
+        Name = rowData[1];
+        Value = int.Parse(rowData[2]);
+        DurationProgress = float.Parse(rowData[3]);
+        Product = rowData[4];
+        ItemSpriteName = rowData[5];
     }
 }

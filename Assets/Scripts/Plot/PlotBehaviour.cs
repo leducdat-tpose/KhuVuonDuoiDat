@@ -6,7 +6,7 @@ using UnityEngine;
 public enum PlotState
 {
     Empty,
-    Growing,
+    InProgress,
     Finish
 }
 
@@ -20,6 +20,8 @@ public class PlotBehaviour : MonoBehaviour
     private Sprite _emptyPlot;
     [SerializeField]
     private Sprite _haveSeedPlot;
+    [SerializeField]
+    private Sprite _collectProductPlot;
     
     [field:SerializeField]
     public PlotState CurrentState;
@@ -43,10 +45,11 @@ public class PlotBehaviour : MonoBehaviour
         _plotData.ResetPlot();
         _soilRenderer.sprite = _emptyPlot;
     }
-    public void Farm(Item item)
+    public void Farm(IFarmable item)
     {
         if(CurrentState != PlotState.Empty) return;
         if(!_plotData.Farming(item)) return;
+        CurrentState = PlotState.InProgress;
         _soilRenderer.sprite = _haveSeedPlot;
         StartCoroutine(GrowingProgress());
     }
@@ -56,7 +59,7 @@ public class PlotBehaviour : MonoBehaviour
     public void ReadyToHarvest()
     {
         CurrentState = PlotState.Finish;
-        _soilRenderer.sprite = DataManager.Instance.GetItemSprite(_plotData.CurrentItem.Name);
+        _soilRenderer.sprite = _collectProductPlot;
     }
     public void Harvest()
     {
@@ -69,7 +72,12 @@ public class PlotBehaviour : MonoBehaviour
     
     private IEnumerator GrowingProgress()
     {
-        yield return new WaitForSecondsRealtime(3f);
+        yield return new WaitForSecondsRealtime(_plotData.CurrentItem.DurationProgress);
         ReadyToHarvest();
+    }
+
+    public void SetSpriteCollectProduct(Sprite sprite)
+    {
+        _collectProductPlot = sprite;
     }
 }

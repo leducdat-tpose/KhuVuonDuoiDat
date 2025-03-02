@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public interface IFarmable
 {
-    public float DurationGrowth {get; set;}
-    public Product Product {get; set;}
-    void Grow();
+    public float DurationProgress {get; set;}
+    public string Product {get; set;}
 }
