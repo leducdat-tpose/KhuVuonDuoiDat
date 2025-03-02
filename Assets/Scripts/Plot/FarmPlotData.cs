@@ -9,20 +9,26 @@ public class FarmPlotData
     public string PlotID;
     public float UnlockCost;
     public bool isUnlocked;
-    public Seed CurrentSeed;
+    public Item CurrentItem{get; private set;}
     // public float GrowthProgress;
     // public float GrowthRate;
 
-    public bool Plant(Seed seed)
+    public bool CanFarm() => isUnlocked && CurrentItem == null;
+
+    public bool Farming(Item item)
     {
-        if(!isUnlocked) return false;
-        if(!GameController.Instance.PlayerData.UseItemInInventory(seed.Name, 1)) return false;
-        CurrentSeed = seed;
+        if(item.Type != ItemType.Seed && item.Type != ItemType.Animal) return false;
+        CurrentItem = item;
         return true;
     }
     public void InitialiseDebug()
     {
         isUnlocked = true;
+    }
+
+    public void ResetPlot()
+    {
+        CurrentItem = null;
     }
 
 }

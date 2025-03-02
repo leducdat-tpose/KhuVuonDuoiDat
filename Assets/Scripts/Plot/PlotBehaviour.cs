@@ -13,7 +13,6 @@ public enum PlotState
 public class PlotBehaviour : MonoBehaviour
 {   
     private FarmPlotData _plotData;
-    private FarmableFactory _farmableFactory;
     [Header("Propertiles")]
     [SerializeField]
     private SpriteRenderer _soilRenderer;
@@ -31,26 +30,23 @@ public class PlotBehaviour : MonoBehaviour
         CurrentState = PlotState.Empty;
         _plotData = new FarmPlotData();
         _plotData.InitialiseDebug();
-        _farmableFactory = new BlueberryFactory();
         _emptyPlot = _soilRenderer.sprite;
-        _haveSeedPlot = _soilRenderer.sprite;
+        _haveSeedPlot = Resources.Load<Sprite>(path: Constant.PlantSprite);
     }
     private void Start() {
         Initialise();
     }
 #region Plant
-    private void ReadyToPlant()
+    private void ReadyToFarm()
     {
         CurrentState = PlotState.Empty;
-        _plotData.CurrentSeed = null;
-        _soilRenderer.color = Color.white;
+        _plotData.ResetPlot();
         _soilRenderer.sprite = _emptyPlot;
     }
-    public void Plant()
+    public void Farm(Item item)
     {
         if(CurrentState != PlotState.Empty) return;
-        if(!_plotData.Plant(_farmableFactory.CreateFarmableItem())) return;
-        _soilRenderer.color = Color.grey;
+        if(!_plotData.Farming(item)) return;
         _soilRenderer.sprite = _haveSeedPlot;
         StartCoroutine(GrowingProgress());
     }
@@ -60,22 +56,20 @@ public class PlotBehaviour : MonoBehaviour
     public void ReadyToHarvest()
     {
         CurrentState = PlotState.Finish;
-        _soilRenderer.color = Color.white;
-        _soilRenderer.sprite = Resources.Load<Sprite>(path:_plotData.CurrentSeed.Sprite);
+        _soilRenderer.sprite = DataManager.Instance.GetItemSprite(_plotData.CurrentItem.Name);
     }
     public void Harvest()
     {
         if(CurrentState != PlotState.Finish) return;
-        GameController.Instance.PlayerData.AddItemIntoInventory(_plotData.CurrentSeed.ProductPrefab.Name, 1);
         _soilRenderer.sprite = _emptyPlot;
-        ReadyToPlant();
+        ReadyToFarm();
     }
 #endregion
     
     
     private IEnumerator GrowingProgress()
     {
-        yield return new WaitForSecondsRealtime(_plotData.CurrentSeed.DurationGrowth);
+        yield return new WaitForSecondsRealtime(3f);
         ReadyToHarvest();
     }
 }

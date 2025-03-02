@@ -33,9 +33,9 @@ public class PlotController : MonoBehaviour
         SetActiveUI(false);
     }
 
-    public void PlantSeed()
+    public void FarmSeed()
     {
-        _behaviour.Plant();
+        _behaviour.Farm(DataManager.Instance.GetItem<Seed>("TomatoSeed"));
         SetActiveUI(false);
     }
     public void Harvest()

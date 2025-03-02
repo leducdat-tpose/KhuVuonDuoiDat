@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance{get; private set;}
     public PlayerData PlayerData{get; private set;}
+    private DataManager _dataManager;
     private void Awake() {
         if (Instance != null && Instance != this) 
         { 
@@ -21,17 +22,18 @@ public class GameController : MonoBehaviour
     }
     private void Start() {
         PlayerData = new PlayerData();
+        _dataManager = DataManager.CreateAndInitialise();
         PlayerData.AddCurrency(100);
-        PlayerData.AddItemIntoInventory(nameof(TomatoSeed), 1);
-        PlayerData.AddItemIntoInventory(nameof(BlueberrySeed), 2);
+        PlayerData.AddItemIntoInventory("TomatoSeed", 1);
+        PlayerData.AddItemIntoInventory("BlueberrySeed", 2);
     }
     private void Update() {
         if(Input.GetKeyUp(KeyCode.Tab))
         {
-            CheckingPlayerData();
+            // CheckingPlayerData();
+            _dataManager.DebugDataCSV();
         }
     }
-
     public void SetPlayerData(PlayerData data)
     {
         if(data == null) return;
@@ -47,7 +49,11 @@ public class GameController : MonoBehaviour
             Debug.Log($"Item: {item.Key}, amount: {item.Value}");
     }
 #endif
+    
 }
+
+
+
 
 public static class SaveLoadJSON
 {

@@ -4,6 +4,6 @@ using UnityEngine;
 public interface IFarmable
 {
     public float DurationGrowth {get; set;}
-    public Product ProductPrefab {get; set;}
+    public Product Product {get; set;}
     void Grow();
 }

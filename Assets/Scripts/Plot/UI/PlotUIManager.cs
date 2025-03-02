@@ -27,7 +27,7 @@ public class PlotUIManager : MonoBehaviour
     private void Start() {
         Initialise();
         _plotCanvas.worldCamera = Camera.main;
-        _plantBtn.onClick.AddListener(_plotController.PlantSeed);
+        _plantBtn.onClick.AddListener(_plotController.FarmSeed);
         _harvestBtn.onClick.AddListener(_plotController.Harvest);
     }
     private void Update() {
