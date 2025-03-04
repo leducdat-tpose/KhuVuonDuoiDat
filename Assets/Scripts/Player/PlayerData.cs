@@ -6,14 +6,16 @@ public class PlayerData
 {
     public int Currency{get; private set;}
     public Dictionary<string, int> Inventory{get; private set;}
+    public int ToolLevel{get; private set;}
+    public int HiredWorker{get;private set;}
+    public int IdleWorker{get;private set;}
     public PlayerData(int initCurrency)
     {
         Currency = initCurrency;
         Inventory = new Dictionary<string, int>();
-        foreach(ItemType type in Enum.GetValues(typeof(ItemType)))
-        {
-            Inventory[type.ToString()] = 0;
-        }
+        ToolLevel = 2;
+        HiredWorker = 4;
+        IdleWorker = HiredWorker;
     }
 
     public void AddItemIntoInventory(string id, int amount)
@@ -30,6 +32,7 @@ public class PlayerData
         if(!Inventory.ContainsKey(id)) return false;
         if(Inventory[id] < amount) return false;
         Inventory[id] -= amount;
+        if(Inventory[id] == 0) Inventory.Remove(id);
         return true;
     }
 

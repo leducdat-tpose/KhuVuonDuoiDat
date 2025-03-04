@@ -13,4 +13,9 @@ public class InputController
         _selectedItem = null;
         _selectedPlot = null;
     }
+
+    public void SelectPlot(string PlotId)
+    {
+        _selectedItem = PlotId;
+    }
 }

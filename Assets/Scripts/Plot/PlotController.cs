@@ -4,48 +4,77 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 
-// public class PlotController : MonoBehaviour
-// {
-//     [SerializeField]
-//     private PlotBehaviour _behaviour;
-//     [SerializeField]
-//     private Canvas _interactionCanvas;
-    
-//     public void Initialise()
-//     {
-//         _behaviour = GetComponent<PlotBehaviour>();
-//         _interactionCanvas = GetComponentInChildren<Canvas>(includeInactive:true);
-//     }
-//     private void Start() {
-//         Initialise();
-//         SetActiveUI(false);
-//     }
+public class PlotController : MonoBehaviour
+{
+    public string Id{get;private set;}
+    [SerializeField]
+    private SpriteRenderer _plotRender;
+    [SerializeField]
+    private Sprite _spriteEmpty;
+    [SerializeField]
+    private Sprite _spriteGrowingObj;
+    [SerializeField]
+    private Sprite _spriteHaveProduct;
+    [SerializeField]
+    private Sprite _spriteLocked;
+    private InputController _inputcontroller;
+    public void InitialOwnedPlot(string Id, GameController gameController, InputController inputController)
+    {
+        Initialise(Id);
+        _inputcontroller = inputController;
+        gameController.OnPlotUpdated += OnPlotUpdated;
+    }
 
-//     private void OnMouseDown() {
-//         if(_interactionCanvas.gameObject.activeSelf) return;
-//         if(EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-//             return;
-//         SetActiveUI(true);
-//     }
+    public void InitialLockedPlot(GameController gameController, InputController inputController)
+    {
+        _plotRender = GetComponent<SpriteRenderer>();
+        _plotRender.color = Color.grey;
+        _plotRender.sprite = _spriteLocked;
+        _inputcontroller = inputController;
+        gameController.OnPlotUpdated += OnPlotUpdated;
+    }
 
-//     private void OnMouseExit() {
-//         if(!_interactionCanvas.gameObject.activeSelf) return;
-//         SetActiveUI(false);
-//     }
+    public void OnPlotUpdated(Plot plot)
+    {
+        if(plot.Id != Id) return;
+        UpdateVisual(plot);
+    }
 
-//     public void FarmSeed()
-//     {
-//         var animal = DataManager.Instance.GetItem<Animal>("Cow");
-//         _behaviour.Farm(animal);
-//         _behaviour.SetSpriteCollectProduct(DataManager.Instance.GetItemSprite(animal.Id));
-//         SetActiveUI(false);
-//     }
-//     public void Harvest()
-//     {
-//         _behaviour.Harvest();
-//         SetActiveUI(false);
-//     }
+    public void Initialise(string Id)
+    {
+        this.Id = Id;
+        _plotRender = GetComponent<SpriteRenderer>();
+        ResetPlotController();
+    }
+    private void ResetPlotController()
+    {
+        _plotRender.sprite = _spriteEmpty;
+        _spriteHaveProduct = null;
+    }
+    private void UpdateVisual(Plot plot)
+    {
+        if(!plot.isUnlocked)
+        {
+            _plotRender.sprite = _spriteLocked;
+            return;
+        }
+        if(plot.CurrentObject != null)
+        {
+            SetSpriteProduct(plot.CurrentObject);
+            if(plot.HaveProduct()) _plotRender.sprite = _spriteHaveProduct;
+            else _plotRender.sprite = _spriteGrowingObj;
+        }
+        else _plotRender.sprite = _spriteEmpty;
+    }
+    private void OnMouseDown() {
+        // _inputcontroller.SelectPlot(Id);
+    }
 
-//     public void SetActiveUI(bool option) => _interactionCanvas.gameObject.SetActive(option);
+    private void SetSpriteProduct(IFarmable farmableItem)
+    {
+        if(_spriteHaveProduct != null) return;
+        Item item = (Item)farmableItem;
+        _spriteHaveProduct = DataManager.Instance?.GetItemSprite(item.Id);
+    }
 
-// }
+}

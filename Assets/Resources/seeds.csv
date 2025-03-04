@@ -2,3 +2,6 @@ Type,Name,Value,DurationProgress,Product,SpriteName
 0,TomatoSeed,10,3,Tomato,tomato
 0,BlueberrySeed,20,5,Blueberry,blueberry
 1,Cow,100,10,Milk,tomato
+2,Tomato,30,0,None,tomato
+2,Milk,30,0,None,tomato
+2,Blueberry,30,0,None,blueberry
