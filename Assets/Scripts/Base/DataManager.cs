@@ -60,20 +60,26 @@ public class DataManager
         }
     }
 
+    public bool IsContainItem(string itemId) => itemDataManager.IsContain(itemId);
+
     //Get item base on item name
-    public Item GetItem(string itemName) => itemDataManager?.GetItem(itemName);
+    public Item GetItem(string itemId) => itemDataManager.GetItem(itemId);
 
     //Get item base on item name with type T
-    public T GetItem<T>(string itemName) where T: Item
-    => itemDataManager?.GetItem<T>(itemName);
+    public T GetItem<T>(string itemId) where T: Item
+    => itemDataManager.GetItem<T>(itemId);
 
 
-    //Get sprite base on item name
-    public Sprite GetItemSprite(string itemName)
+    public Sprite GetItemSprite(string itemId)
     {
-        if(spriteCache.TryGetValue(itemName, out Sprite itemSprite)) return itemSprite;
+        if(spriteCache.TryGetValue(itemId, out Sprite itemSprite)) return itemSprite;
         return null;
     }
+
+    public Item CreateItem(string itemId) => itemDataManager.CreateItem(itemId);
+
+    public T CreateItem<T>(string itemId) where T: Item
+    => itemDataManager.CreateItem<T>(itemId);
 
     //Checking data in csv is correct or not
     public void DebugDataCSV()

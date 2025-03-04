@@ -46,4 +46,20 @@ public class Seed : Item, IFarmable
         AmountProduct = 0;
         return amount;
     }
+
+    public override Item Clone()
+    {
+        Seed copy = new Seed();
+        copy.Type = this.Type;
+        copy.Id = this.Id;
+        copy.Value = this.Value;
+        copy.DurationProgress = this.DurationProgress;
+        copy.Product = this.Product;
+        copy.ItemSpriteName = this.ItemSpriteName;
+        copy.GrowthTime = this.GrowthTime; 
+        copy.TimesToMaturity = this.TimesToMaturity;
+        copy.AmountProduct = this.AmountProduct;
+        copy.LimitAmountProduct = this.LimitAmountProduct;
+        return copy;
+    }
 }

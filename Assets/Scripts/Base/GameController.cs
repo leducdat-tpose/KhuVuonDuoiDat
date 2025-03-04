@@ -5,101 +5,116 @@ using System.IO;
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.Linq;
 
-public class GameController : MonoBehaviour
+public class GameController
 {
-    public static GameController Instance{get; private set;}
-    public PlayerData PlayerData{get; private set;}
-    private DataManager _dataManager;
-    private void Awake() {
-        if (Instance != null && Instance != this) 
-        { 
-            Destroy(this); 
-        } 
-        else 
-        { 
-            Instance = this; 
-        }
-    }
-    private void Start() {
-        PlayerData = new PlayerData();
-        _dataManager = DataManager.CreateAndInitialise();
-        PlayerData.AddCurrency(100);
-        PlayerData.AddItemIntoInventory("TomatoSeed", 1);
-        PlayerData.AddItemIntoInventory("BlueberrySeed", 2);
-    }
-    private void Update() {
-        if(Input.GetKeyUp(KeyCode.Tab))
-        {
-            // CheckingPlayerData();
-            _dataManager.DebugDataCSV();
-        }
-    }
-    public void SetPlayerData(PlayerData data)
+    private Farm _farm;
+
+    public event Action<Plot> OnPlotUpdated;
+    public event Action<PlayerData> OnPlayerDataChanged;
+    public GameController(int initCurrency, int initPlotCount)
     {
-        if(data == null) return;
-        this.PlayerData = data;
+        _farm = new Farm(initCurrency, initPlotCount);
     }
-#if UNITY_EDITOR
-    public void CheckingPlayerData()
-    {
-        if(PlayerData == null) return;
-        Debug.Log($"Player curreny:{PlayerData.Currency}");
-        var invenData = PlayerData.Inventory;
-        foreach(KeyValuePair<string, int> item in invenData)
-            Debug.Log($"Item: {item.Key}, amount: {item.Value}");
-    }
-#endif
     
-}
-
-
-
-
-public static class SaveLoadJSON
-{
-    public static void SaveData(PlayerData playerData)
+    public void Update()
     {
-        string savePlayerData = JsonUtility.ToJson(playerData);
+        _farm.Update();
+    }
+
+    public List<Plot> GetAllPlots() => _farm.Plots;
+
+    private Plot FindPlot(string plotId) 
+        => _farm.Plots.FirstOrDefault(plot => plot.Id == plotId);
+
+    public bool UsePlot<T>(string plotId, string itemId) where T: Item
+    {
+        Plot plot = FindPlot(plotId);
+        if(plot == null) return false;
+        if(_farm.PlayerData.Inventory[itemId] <= 0) return false;
+        T item = DataManager.Instance.CreateItem<T>(itemId);
+        if(item == null) return false;
+        bool result = plot.StartFarm(item);
+        if(result)
+        {
+            _farm.PlayerData.RemoveItemInInventory(item.Id, 1);
+            OnPlotUpdated?.Invoke(plot);
+            OnPlayerDataChanged?.Invoke(_farm.PlayerData);
+        }
+        return result;
+    }
+
+    public bool BuyItem(string itemId, int amount)
+    {
+        bool result = _farm.BuyItem(itemId, amount);
+        if(result)
+        {
+            OnPlayerDataChanged?.Invoke(_farm.PlayerData);
+        }
+        return result;
+    }
+
+    public bool SellItem(string itemId, int amount)
+    {
+        bool result = _farm.SellItem(itemId, amount);
+        if(result)
+        {
+            OnPlayerDataChanged?.Invoke(_farm.PlayerData);
+        }
+        return result;
+    }
+
+    public PlayerData GetPlayerData() => _farm.PlayerData;
+
+}   
+
+
+
+// public static class SaveLoadJSON
+// {
+//     public static void SaveData(PlayerData playerData)
+//     {
+//         string savePlayerData = JsonUtility.ToJson(playerData);
         
-        Debug.Log(savePlayerData);
-        File.WriteAllText(Constant.SaveFilePath, savePlayerData);
-    }
-    public static PlayerData LoadData()
-    {
-        if(File.Exists(Constant.SaveFilePath))
-        {
-            string loadPlayerData = File.ReadAllText(Constant.SaveFilePath);
-            Debug.Log(loadPlayerData);
-            return JsonUtility.FromJson<PlayerData>(loadPlayerData);
-        }
-        Debug.Log($"Not exist or can't load data from file: {Constant.SaveFilePath}");
-        return null;
-    }
-    public static void DeleteSaveFile()
-    {
-        if(!File.Exists(Constant.SaveFilePath)) return;
-        Debug.Log("Delete save file success");
-        File.Delete(Constant.SaveFilePath);
-    }
-}
+//         Debug.Log(savePlayerData);
+//         File.WriteAllText(Constant.SaveFilePath, savePlayerData);
+//     }
+//     public static PlayerData LoadData()
+//     {
+//         if(File.Exists(Constant.SaveFilePath))
+//         {
+//             string loadPlayerData = File.ReadAllText(Constant.SaveFilePath);
+//             Debug.Log(loadPlayerData);
+//             return JsonUtility.FromJson<PlayerData>(loadPlayerData);
+//         }
+//         Debug.Log($"Not exist or can't load data from file: {Constant.SaveFilePath}");
+//         return null;
+//     }
+//     public static void DeleteSaveFile()
+//     {
+//         if(!File.Exists(Constant.SaveFilePath)) return;
+//         Debug.Log("Delete save file success");
+//         File.Delete(Constant.SaveFilePath);
+//     }
+// }
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(GameController))]
-public class GameControllerEditor: Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        GameController controller = (GameController)target;
-        if(GUILayout.Button("Save PlayerData"))
-        {
-            SaveLoadJSON.SaveData(controller.PlayerData);
-        }
-        if(GUILayout.Button("Load PlayerData"))
-        {
-            controller.SetPlayerData(SaveLoadJSON.LoadData());
-        }
-    }
-}
-#endif
+// #if UNITY_EDITOR
+// [CustomEditor(typeof(GameController))]
+// public class GameControllerEditor: Editor
+// {
+//     public override void OnInspectorGUI()
+//     {
+//         DrawDefaultInspector();
+//         GameController controller = (GameController)target;
+//         if(GUILayout.Button("Save PlayerData"))
+//         {
+//             SaveLoadJSON.SaveData(controller.PlayerData);
+//         }
+//         if(GUILayout.Button("Load PlayerData"))
+//         {
+//             controller.SetPlayerData(SaveLoadJSON.LoadData());
+//         }
+//     }
+// }
+// #endif

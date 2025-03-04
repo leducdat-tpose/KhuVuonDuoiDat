@@ -97,10 +97,13 @@ public class Plot
         if(CurrentObject == null) return;
         CurrentObject.Update();
     }
-    public void StartFarm(IFarmable item)
+    public bool StartFarm(Item item)
     {
-        if(!isUnlocked) return;
-        CurrentObject = item;
+        if(!isUnlocked) return false;
+        if(CurrentObject != null) return false;
+        if(item is not IFarmable farmableItem) return false;
+        CurrentObject = farmableItem;
+        return true;
     }
     public void Harvest()
     {

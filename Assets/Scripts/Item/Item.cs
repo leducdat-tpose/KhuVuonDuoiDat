@@ -16,5 +16,22 @@ public abstract class Item
     public ItemType Type {get; protected set;}
     public int Value{get; protected set;}
 
+    public abstract Item Clone();
+    public virtual T Clone<T>()
+    {
+        return (T)(object)Clone();
+    }
+
     public abstract void LoadData(string[] rowData);
+}
+
+public class ItemData
+{
+    public string Id{get; private set;}
+    public string[] Data{get; private set;}
+    public ItemData(string Id, string[] Data)
+    {
+        this.Id = Id;
+        this.Data = Data;
+    }
 }

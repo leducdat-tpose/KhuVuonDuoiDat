@@ -1,31 +1,35 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class PlayerData
 {
     public int Currency{get; private set;}
     public Dictionary<string, int> Inventory{get; private set;}
-    public PlayerData()
+    public PlayerData(int initCurrency)
     {
-        Currency = 0;
+        Currency = initCurrency;
         Inventory = new Dictionary<string, int>();
-    }
-
-    public void AddItemIntoInventory(string itemID, int amount)
-    {
-        if(!Inventory.ContainsKey(itemID))
+        foreach(ItemType type in Enum.GetValues(typeof(ItemType)))
         {
-            Inventory[itemID] = 0;
+            Inventory[type.ToString()] = 0;
         }
-        Inventory[itemID] += amount;
     }
 
-    public bool UseItemInInventory(string itemID, int amount)
+    public void AddItemIntoInventory(string id, int amount)
     {
-        if(!Inventory.ContainsKey(itemID)) return false;
-        if(Inventory[itemID] < amount) return false;
-        Inventory[itemID] -= amount;
+        if(!Inventory.ContainsKey(id))
+        {
+            Inventory[id] = 0;
+        }
+        Inventory[id] += amount;
+    }
+
+    public bool RemoveItemInInventory(string id, int amount)
+    {
+        if(!Inventory.ContainsKey(id)) return false;
+        if(Inventory[id] < amount) return false;
+        Inventory[id] -= amount;
         return true;
     }
 
@@ -33,8 +37,8 @@ public class PlayerData
 
     public bool SpendCurrency(int amount)
     {
-        if(Currency < amount) return false;
+        if(!CanAfford(amount)) return false;
         Currency -= amount; return true;
     }
-
+    public bool CanAfford(int cost) => Currency >= cost;
 }
