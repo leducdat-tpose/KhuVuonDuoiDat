@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using System.Linq;
-using UnityEngine;
 
 public class ItemDataManager
 {
@@ -14,20 +13,25 @@ public class ItemDataManager
         if(Enum.TryParse(values[0], out ItemType type))
         {
             if(type == ItemType.Seed)
-            if(values.Length >= 6)
             {
-                string name = values[1];
+                string id = values[1];
                 Seed seed = new Seed();
                 seed.LoadData(values);
-                itemDatabase.Add(name, seed);
+                itemDatabase.Add(id, seed);
             }
-            if(type == ItemType.Animal)
-            if(values.Length >= 6)
+            else if(type == ItemType.Animal)
             {
-                string name = values[1];
+                string id = values[1];
                 Animal animal = new Animal();
                 animal.LoadData(values);
-                itemDatabase.Add(name, animal);
+                itemDatabase.Add(id, animal);
+            }
+            else if(type == ItemType.Product)
+            {
+                string id = values[1];
+                Product product = new Product();
+                product.LoadData(values);
+                itemDatabase.Add(id, product);
             }
         }
         
@@ -37,7 +41,7 @@ public class ItemDataManager
     {
         if(!File.Exists(filePath))
         {
-            Debug.Log($"Error: CSV file not found at {filePath}");
+            Console.WriteLine($"Error: CSV file not found at {filePath}");
             return;
         }
         string[] lines = File.ReadAllLines(filePath);
@@ -52,7 +56,7 @@ public class ItemDataManager
     public Item GetItem(string itemName)
     {
         if(itemDatabase.TryGetValue(itemName, out Item item)) return item;
-        Debug.Log($"Item not found: {itemName}");
+        Console.WriteLine($"Item not found: {itemName}");
         return null;
     }
 
@@ -61,7 +65,7 @@ public class ItemDataManager
         {
             return typedItem;
         }
-        Debug.Log($"Item of type:{typeof(T).Name} not found: {itemName}");
+        Console.WriteLine($"Item of type:{typeof(T).Name} not found: {itemName}");
         return null;
     }
 

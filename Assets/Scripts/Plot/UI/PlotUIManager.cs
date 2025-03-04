@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class PlotUIManager : MonoBehaviour
 {
-    [SerializeField]
-    private PlotController _plotController;
+    // [SerializeField]
+    // private PlotController _plotController;
     [SerializeField]
     private Canvas _plotCanvas;
     [Header("UI Elements")]
@@ -18,7 +18,7 @@ public class PlotUIManager : MonoBehaviour
     public void Initialise()
     {
         _plotCanvas = GetComponent<Canvas>();
-        _plotController = GetComponentInParent<PlotController>();
+        // _plotController = GetComponentInParent<PlotController>();
         _plantBtn = transform.Find("PlantBtn").GetComponent<Button>();
         _harvestBtn = transform.Find("HarvestBtn").GetComponent<Button>();
         
@@ -27,8 +27,8 @@ public class PlotUIManager : MonoBehaviour
     private void Start() {
         Initialise();
         _plotCanvas.worldCamera = Camera.main;
-        _plantBtn.onClick.AddListener(_plotController.FarmSeed);
-        _harvestBtn.onClick.AddListener(_plotController.Harvest);
+        // _plantBtn.onClick.AddListener(_plotController.FarmSeed);
+        // _harvestBtn.onClick.AddListener(_plotController.Harvest);
     }
     private void Update() {
         

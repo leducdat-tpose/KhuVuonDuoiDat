@@ -2,18 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
+public enum ProductType{
+    None,
+    Tomato,
+    Blueberry,
+}
 
-[System.Serializable]
-public struct Product
+public class Product : Item
 {
-    public string Name{get; set;}
-    public int SellMoney{get; set;}
-    public string Sprite{get; set;}
-    public Product GetProduct(string name, int sellMoney, string sprite){
-        return new Product(){
-            Name = name,
-            SellMoney = sellMoney,
-            Sprite = sprite,
-        };
+    public float DurationProgress {get; set;}
+    public ProductType productType {get; set;}
+    public override void LoadData(string[] rowData)
+    {
+        if(Enum.TryParse(rowData[0], out ItemType type))
+        {
+            Type = type;
+        } else Type = ItemType.Product;
+        Id = rowData[1];
+        Value = int.Parse(rowData[2]);
+        DurationProgress = float.Parse(rowData[3]);
+        productType = (ProductType)Enum.Parse(typeof(ProductType), rowData[4]);
+        ItemSpriteName = rowData[5];
     }
 }
