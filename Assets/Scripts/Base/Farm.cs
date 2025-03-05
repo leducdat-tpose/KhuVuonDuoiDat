@@ -8,15 +8,12 @@ public class Farm
     public List<Plot> Plots{get;private set;}
     public PlayerData PlayerData{get;private set;}
     private DataManager _dataManager;
-    public Farm(int initCurrency, int initPlotCount)
+    public Farm()
     {
-        PlayerData = new PlayerData(initCurrency);
-        Plots = new List<Plot>();
-        _dataManager =DataManager.CreateAndInitialise();
-        for(int i = 0; i < initPlotCount; i++)
-        {
-            Plots.Add(new Plot(id: $"plot_{i}"));
-        }
+        _dataManager = DataManager.CreateAndInitialise();
+        PlayerData = new PlayerData();
+        // PlayerData = _dataManager.LoadPlayerData();
+        Plots = PlayerData.Plots;
     }
 
     public bool BuyItem(string id, int amount)

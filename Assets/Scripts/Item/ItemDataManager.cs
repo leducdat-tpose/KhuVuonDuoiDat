@@ -42,7 +42,7 @@ public class ItemDataManager
     {
         if(itemDatabase.TryGetValue(itemName, out Item item))
         {
-            return item.Clone();
+            return item;
         }
         Console.WriteLine($"Item not found: {itemName}");
         return null;
@@ -51,7 +51,7 @@ public class ItemDataManager
     public T GetItem<T>(string itemId) where T: Item{
         if(itemDatabase.TryGetValue(itemId, out Item item) && item is T typedItem)
         {
-            return typedItem.Clone<T>();
+            return typedItem;
         }
         Console.WriteLine($"Item of type:{typeof(T).Name} not found: {itemId}");
         return null;

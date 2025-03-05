@@ -4885,9 +4885,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1818731197}
     m_Modifications:
+    - target: {fileID: 2752531444387937687, guid: b2cc453fd5c03604e9bc3fc91038c899, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6251370366797544599, guid: b2cc453fd5c03604e9bc3fc91038c899, type: 3}
       propertyPath: m_Name
       value: Plot
+      objectReference: {fileID: 0}
+    - target: {fileID: 7114109925547432463, guid: b2cc453fd5c03604e9bc3fc91038c899, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7554270871671612823, guid: b2cc453fd5c03604e9bc3fc91038c899, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4927,6 +4935,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7554270871671612823, guid: b2cc453fd5c03604e9bc3fc91038c899, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410217681511078106, guid: b2cc453fd5c03604e9bc3fc91038c899, type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

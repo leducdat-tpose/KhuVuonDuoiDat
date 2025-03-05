@@ -2,16 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using UnityEngine;
 public class GameController
 {
     private Farm _farm;
 
     public event Action<Plot> OnPlotUpdated;
     public event Action<PlayerData> OnPlayerDataChanged;
-    public GameController(int initCurrency, int initPlotCount)
+    public GameController()
     {
-        _farm = new Farm(initCurrency, initPlotCount);
+        _farm = new Farm();
     }
     
     public void Update()
@@ -21,7 +20,7 @@ public class GameController
 
     public List<Plot> GetAllPlots() => _farm.Plots;
 
-    private Plot FindPlot(string plotId) 
+    public Plot FindPlot(string plotId) 
         => _farm.Plots.FirstOrDefault(plot => plot.Id == plotId);
 
     public bool UsePlot<T>(string plotId, string itemId) where T: Item
@@ -66,15 +65,11 @@ public class GameController
     public bool PlantItem(string plotId, string itemId)
     {
         Plot plot = FindPlot(plotId);
-        Debug.Log($"Plot{plot.Id}");
         if(plot == null) return false;
-        Debug.Log($"Inventory{_farm.PlayerData.Inventory[itemId] <= 0}");
         if(_farm.PlayerData.Inventory[itemId] <= 0) return false;
         Item item = DataManager.Instance.CreateItem(itemId);
-        Debug.Log($"Item{item.Id}");
         if(item == null) return false;
         bool result = plot.StartFarm(item);
-        Debug.Log($"Result{result}");
         if(result)
         {
             _farm.PlayerData.RemoveItemInInventory(itemId, 1);

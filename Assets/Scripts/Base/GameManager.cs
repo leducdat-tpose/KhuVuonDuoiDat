@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
     private UIManager _uiManager;
 
     private void Awake() {
-        _gamecontroller = new GameController(initCurrency, initPlotCount);
+        _gamecontroller = new GameController();
         _inputcontroller = new InputController(_gamecontroller);
         _gamecontroller.OnPlayerDataChanged += OnPlayerDataChanged;
         _gamecontroller.OnPlotUpdated += OnPlotUpdated;
@@ -28,18 +29,15 @@ public class GameManager : MonoBehaviour
     private void Start() {
         List<Plot> plots = _gamecontroller.GetAllPlots();
         int plotAvai = plots.Count;
-        Debug.Log($"Num plot{plotAvai}");
         for(int i = 0; i < _plotControllerList.Count; i++)
         {
             if(plotAvai > 0)
             {
-                Debug.Log($"Plot id: {plots[i].Id}");
                 _plotControllerList[i].InitialOwnedPlot(plots[i].Id, _gamecontroller, _inputcontroller);
                 plotAvai--;
             }
             else
             {
-                Debug.Log("Locked plot");
                 _plotControllerList[i].InitialLockedPlot(_gamecontroller, _inputcontroller);
             }
             
@@ -61,5 +59,15 @@ public class GameManager : MonoBehaviour
     public void UpdateUI()
     {
         _uiManager?.UpdateAll();
+    }
+
+    private void Update() {
+        _gamecontroller.Update();
+        if(Input.GetKeyUp(KeyCode.P))
+        {
+            Debug.Log(DataManager.Instance.SavePlayerData(_gamecontroller.GetPlayerData()));
+        }
+    }
+    private void OnApplicationQuit() {
     }
 }

@@ -28,7 +28,6 @@ public class Inventory : MonoBehaviour
         int i = 0;
         foreach(KeyValuePair<string, int> item in _playerData.Inventory)
         {
-            Debug.Log($"{item.Key},{item.Value}");
             _itemSlots[i].gameObject.SetActive(true);
             _itemSlots[i].SetupItemSlot(item.Key, item.Value);
             i++;

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class InputController
 {
@@ -52,7 +51,6 @@ public class InputController
         switch (_toolType)
         {
             case ToolType.Plant:
-            Debug.Log($"Plant item{_selectedPlotId}, {_selectedItemId}");
                 _gameController.PlantItem(_selectedPlotId, _selectedItemId);
                 ResetValue();
                 break;

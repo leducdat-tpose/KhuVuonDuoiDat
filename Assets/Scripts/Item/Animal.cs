@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
-
+[Serializable]
 public class Animal : Item, IFarmable
 {
-    public float DurationProgress {get; set;}
+    public double GrowthDuration {get; set;}
     public ProductType Product {get; set;}
     public int AmountProduct {get;set;}
     public int LimitAmountProduct{get;set;}
-    public float GrowthTime{get;set;}
-    public float TimesToMaturity{get;set;}
+    public DateTime PlantedTime {get;set;}
     public override void LoadData(string[] rowData)
     {
         //Order: Type, Name, Value, DurationProgress, Product, SpriteName
@@ -20,18 +19,18 @@ public class Animal : Item, IFarmable
         } else Type = ItemType.Animal;
         Id = rowData[1];
         Value = int.Parse(rowData[2]);
-        DurationProgress = float.Parse(rowData[3]);
+        GrowthDuration = float.Parse(rowData[3]);
         Product = (ProductType)Enum.Parse(typeof(ProductType), rowData[4]);
         ItemSpriteName = rowData[5];
     }
 
     public void Update()
     {
-        if(AmountProduct >= LimitAmountProduct) return;
-        GrowthTime++;
-        if(GrowthTime < TimesToMaturity) return;
-        GrowthTime = 0;
-        AmountProduct++;
+        if(AmountProduct == LimitAmountProduct) return;
+        TimeSpan span = DateTime.Now - PlantedTime;
+        if(span.TotalSeconds < GrowthDuration) return;
+        AmountProduct += 1;
+        GrowthDuration += span.TotalSeconds;
     }
     public int CollectProduct()
     {
@@ -41,19 +40,15 @@ public class Animal : Item, IFarmable
         return amount;
     }
     public bool IsOutOfProduct() => LimitAmountProduct == 0;
-    public override Item Clone()
+
+    public void StartGrowing()
     {
-        Animal copy = new Animal();
-        copy.Type = this.Type;
-        copy.Id = this.Id;
-        copy.Value = this.Value;
-        copy.DurationProgress = this.DurationProgress;
-        copy.Product = this.Product;
-        copy.ItemSpriteName = this.ItemSpriteName;
-        copy.GrowthTime = this.GrowthTime; 
-        copy.TimesToMaturity = this.TimesToMaturity;
-        copy.AmountProduct = this.AmountProduct;
-        copy.LimitAmountProduct = this.LimitAmountProduct;
-        return copy;
+        PlantedTime = DateTime.Now;
+    }
+    public int GetTimeCountGrowth()
+    {
+        if(AmountProduct == LimitAmountProduct) return 0;
+        TimeSpan span = DateTime.Now - PlantedTime;
+        return (int)(GrowthDuration - span.TotalSeconds);
     }
 }

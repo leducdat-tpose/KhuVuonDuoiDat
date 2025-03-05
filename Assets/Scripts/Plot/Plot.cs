@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
+[Serializable]
 public class Plot
 {
     public string Id;
@@ -29,6 +29,7 @@ public class Plot
         if(CurrentObject != null) return false;
         if(item is not IFarmable farmableItem) return false;
         CurrentObject = farmableItem;
+        CurrentObject.StartGrowing();
         return true;
     }
     public int Harvest()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public class DataManager
 {
@@ -19,11 +20,13 @@ public class DataManager
         return dataManager;
     }
 
-    private ItemDataManager itemDataManager;
+    private ItemDataManager _itemDataManager;
+    private PlayerDataManager _playerDataManager;
     private Dictionary<string, Sprite> spriteCache = new Dictionary<string, Sprite>();
     private void Initialise()
     {
-        itemDataManager = new ItemDataManager();
+        _itemDataManager = new ItemDataManager();
+        _playerDataManager = new PlayerDataManager();
         LoadItems();
     }
     
@@ -39,19 +42,45 @@ public class DataManager
         return path;
     }
 
+    private string GetJsonFilePath()
+    {
+        string direct;
+        if(Application.isEditor||Debug.isDebugBuild)
+            direct = Path.Combine(Application.dataPath, "GameData");
+        else direct = Application.persistentDataPath;
+        if(!Directory.Exists(direct))
+        {
+            Directory.CreateDirectory(direct);
+        }
+        string path = Path.Combine(direct, Constant.PlayerDataJsonFileName);
+        path = path.Replace("/", "\\");
+        return path;
+    }
+
     private void LoadItems()
     {
         string filePath = GetCSVFilePath();
         Debug.Log($"filePath: {filePath}");
 
-        itemDataManager.LoadItemsFromCSVFile(filePath);
+        _itemDataManager.LoadItemsFromCSVFile(filePath);
         LoadItemsSprite();
+    }
+    public PlayerData LoadPlayerData()
+    {
+        string path = GetJsonFilePath();
+        return _playerDataManager.Load(path);
+    }
+
+    public string SavePlayerData(PlayerData playerData)
+    {
+        string path = GetJsonFilePath();
+        return _playerDataManager.Save(playerData, path);
     }
     
     //Load sprite for item at once
     private void LoadItemsSprite()
     {
-        var database = itemDataManager?.GetItemDatabase();
+        var database = _itemDataManager?.GetItemDatabase();
         foreach(KeyValuePair<string, Item> item in database)
         {
             Sprite sprite = Resources.Load<Sprite>($"{Constant.spriteFolderPath}/{item.Value.ItemSpriteName}");
@@ -60,14 +89,14 @@ public class DataManager
         }
     }
 
-    public bool IsContainItem(string itemId) => itemDataManager.IsContain(itemId);
+    public bool IsContainItem(string itemId) => _itemDataManager.IsContain(itemId);
 
     //Get item base on item name
-    public Item GetItem(string itemId) => itemDataManager.GetItem(itemId);
+    public Item GetItem(string itemId) => _itemDataManager.GetItem(itemId);
 
     //Get item base on item name with type T
     public T GetItem<T>(string itemId) where T: Item
-    => itemDataManager.GetItem<T>(itemId);
+    => _itemDataManager.GetItem<T>(itemId);
 
 
     public Sprite GetItemSprite(string itemId)
@@ -76,20 +105,37 @@ public class DataManager
         return null;
     }
 
-    public Item CreateItem(string itemId) => itemDataManager.CreateItem(itemId);
+    public Item CreateItem(string itemId) => _itemDataManager.CreateItem(itemId);
 
     public T CreateItem<T>(string itemId) where T: Item
-    => itemDataManager.CreateItem<T>(itemId);
+    => _itemDataManager.CreateItem<T>(itemId);
 
     //Checking data in csv is correct or not
     public void DebugDataCSV()
     {
-        var database = itemDataManager.GetItemDatabase();
+        var database = _itemDataManager.GetItemDatabase();
         foreach(KeyValuePair<string, Item> item in database)
         {
             Debug.Log($"Item name:{item.Key}, item:{item.Value}");
             Debug.Log($"Sprite: {GetItemSprite(item.Key)}");
             Debug.Log($"Type: {item.Value.Type}");
         }
+    }
+}
+
+
+public class PlayerDataManager
+{
+    public string Save(PlayerData data, string filePath)
+    {
+        string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+        return jsonString;
+        // File.WriteAllText(filePath, jsonString);
+    }
+    public PlayerData Load(string filePath)
+    {
+        if(!File.Exists(filePath)) return new PlayerData();
+        string jsonString = File.ReadAllText(filePath);
+        return JsonConvert.DeserializeObject<PlayerData>(jsonString);
     }
 }

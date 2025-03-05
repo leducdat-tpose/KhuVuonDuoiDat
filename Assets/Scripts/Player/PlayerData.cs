@@ -6,12 +6,19 @@ public class PlayerData
 {
     public int Currency{get; private set;}
     public Dictionary<string, int> Inventory{get; private set;}
+    public List<Plot> Plots{get; private set;}
     public int ToolLevel{get; private set;}
     public int HiredWorker{get;private set;}
     public int IdleWorker{get;private set;}
-    public PlayerData(int initCurrency)
+    public DateTime LastPlayedTime{get; private set;}
+    public PlayerData()
     {
-        Currency = initCurrency;
+        Currency = Constant.initCurrency;
+        Plots = new List<Plot>();
+        for(int i = 0; i < Constant.initPlotCount; i++)
+        {
+            Plots.Add(new Plot(id: $"plot_{i}"));
+        }
         Inventory = new Dictionary<string, int>();
         ToolLevel = 2;
         HiredWorker = 4;

@@ -3,30 +3,18 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using System;
+[Serializable]
 public enum ProductType{
     None,
     Tomato,
     Blueberry,
     Milk,
 }
-
+[Serializable]
 public class Product : Item
 {
     public float DurationProgress {get; set;}
     public ProductType productType {get; set;}
-
-    public override Item Clone()
-    {
-        Product copy = new Product();
-        copy.Type = this.Type;
-        copy.Id = this.Id;
-        copy.Value = this.Value;
-        copy.DurationProgress = this.DurationProgress;
-        copy.productType = this.productType;
-        copy.ItemSpriteName = this.ItemSpriteName;
-        return copy;
-    }
-
     public override void LoadData(string[] rowData)
     {
         if(Enum.TryParse(rowData[0], out ItemType type))
