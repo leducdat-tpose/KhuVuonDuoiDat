@@ -67,7 +67,9 @@ public class PlotController : MonoBehaviour
         else _plotRender.sprite = _spriteEmpty;
     }
     private void OnMouseDown() {
-        // _inputcontroller.SelectPlot(Id);
+        Debug.Log("OnMouseDown on PlotController");
+        _inputcontroller.SelectTool(InputController.ToolType.Plant);
+        _inputcontroller.SelectPlot(Id);
     }
 
     private void SetSpriteProduct(IFarmable farmableItem)

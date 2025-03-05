@@ -13,8 +13,6 @@ public class UIManager : MonoBehaviour
     [Header("References")]
     [SerializeField]
     private GameObject _currencyPanel;
-    // [SerializeField]
-    // private GameObject _storePanel;
     [SerializeField]
     private GameObject _workerCountPanel;
     [SerializeField]
@@ -22,18 +20,39 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject _toolLevelPanel;
     [SerializeField]
+    private GameObject _inventoryPanel;
+    [SerializeField]
     private TextMeshProUGUI _currencyText;
     [SerializeField]
-    private TextMeshProUGUI _inventoryTexts;
+    private Button _plantItemBtn;
     [SerializeField]
-    private Button _buyItemBtn;
+    private Button _harvestItemBtn;
     [SerializeField]
-    private Button _sellItemBtn;
+    private Button _storeBtn;
+    [SerializeField]
+    private Button _inventoryBtn;
+    [SerializeField]
+    private Button _closeInvenBtn;
 
     public void Initialise(GameController gameController, InputController inputController)
     {
         _gameController = gameController;
         _inputController = inputController;
+        InitialiseBottomPanel();
+    }
+
+    private void InitialiseBottomPanel()
+    {
+        _plantItemBtn.onClick.AddListener(() => _inputController.SelectTool(InputController.ToolType.Plant));
+        _harvestItemBtn.onClick.AddListener(() => _inputController.SelectTool(InputController.ToolType.Harvest));
+        _inventoryBtn.onClick.AddListener(() => SetInventoryPanel(true));
+        _inventoryPanel.transform.GetComponent<Inventory>().Initialise(_gameController, _inputController);
+    }
+
+    private void GetTomato()
+    {
+        Debug.Log("Select item tomato");
+        _inputController.SelectItem("TomatoSeed");
     }
 
     private void Update() {
@@ -89,6 +108,11 @@ public class UIManager : MonoBehaviour
     private void OnSellItemBtn(string itemId)
     {
         _gameController.SellItem(itemId, 1);
+    }
+
+    private void SetInventoryPanel(bool option)
+    {
+        _inventoryPanel.SetActive(option);
     }
 
     // private void OnGUI() {

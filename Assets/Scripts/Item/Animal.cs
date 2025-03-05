@@ -40,6 +40,7 @@ public class Animal : Item, IFarmable
         AmountProduct = 0;
         return amount;
     }
+    public bool IsOutOfProduct() => LimitAmountProduct == 0;
     public override Item Clone()
     {
         Animal copy = new Animal();

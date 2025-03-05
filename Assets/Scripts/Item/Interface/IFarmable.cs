@@ -10,5 +10,6 @@ public interface IFarmable
     public float GrowthTime{get;set;}
     public float TimesToMaturity{get;set;}
     public  int CollectProduct();
+    public bool IsOutOfProduct();
     public void Update();
 }

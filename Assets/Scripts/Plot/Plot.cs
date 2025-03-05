@@ -31,8 +31,11 @@ public class Plot
         CurrentObject = farmableItem;
         return true;
     }
-    public void Harvest()
+    public int Harvest()
     {
+        int amount = CurrentObject.CollectProduct();
+        if(CurrentObject.IsOutOfProduct()) ResetPlot();
+        return amount;
     }
     public void ResetPlot()
     {

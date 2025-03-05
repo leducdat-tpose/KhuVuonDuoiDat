@@ -47,6 +47,8 @@ public class Seed : Item, IFarmable
         return amount;
     }
 
+    public bool IsOutOfProduct() => LimitAmountProduct == 0;
+
     public override Item Clone()
     {
         Seed copy = new Seed();

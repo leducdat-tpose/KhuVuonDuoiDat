@@ -1,12 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using UnityEngine;
-using UnityEditor;
 using System;
 using System.Linq;
-
+using UnityEngine;
 public class GameController
 {
     private Farm _farm;
@@ -66,5 +62,39 @@ public class GameController
     }
 
     public PlayerData GetPlayerData() => _farm.PlayerData;
+
+    public bool PlantItem(string plotId, string itemId)
+    {
+        Plot plot = FindPlot(plotId);
+        Debug.Log($"Plot{plot.Id}");
+        if(plot == null) return false;
+        Debug.Log($"Inventory{_farm.PlayerData.Inventory[itemId] <= 0}");
+        if(_farm.PlayerData.Inventory[itemId] <= 0) return false;
+        Item item = DataManager.Instance.CreateItem(itemId);
+        Debug.Log($"Item{item.Id}");
+        if(item == null) return false;
+        bool result = plot.StartFarm(item);
+        Debug.Log($"Result{result}");
+        if(result)
+        {
+            _farm.PlayerData.RemoveItemInInventory(itemId, 1);
+            OnPlotUpdated?.Invoke(plot);
+            OnPlayerDataChanged?.Invoke(_farm.PlayerData);
+        }
+        return result;
+    }
+
+    public bool HarvestItem(string plotId)
+    {
+        Plot plot = FindPlot(plotId);
+        if(plot == null || !plot.HaveProduct()) return false;
+        Item item = DataManager.Instance.CreateItem(plot.CurrentObject.Product.ToString());
+        if(item == null) return false;
+        int amount = plot.Harvest();
+        _farm.PlayerData.AddItemIntoInventory(item.Id, amount);
+        OnPlotUpdated?.Invoke(plot);
+        OnPlayerDataChanged?.Invoke(_farm.PlayerData);
+        return true;
+    }
 
 }
