@@ -23,7 +23,7 @@ public class GameController
     public Plot FindPlot(string plotId) 
         => _farm.Plots.FirstOrDefault(plot => plot.Id == plotId);
 
-    public bool UsePlot<T>(string plotId, string itemId) where T: Item
+    public bool UsePlot<T>(string plotId, string itemId) where T: FarmableItem
     {
         Plot plot = FindPlot(plotId);
         if(plot == null) return false;
@@ -67,7 +67,7 @@ public class GameController
         Plot plot = FindPlot(plotId);
         if(plot == null) return false;
         if(_farm.PlayerData.Inventory[itemId] <= 0) return false;
-        Item item = DataManager.Instance.CreateItem(itemId);
+        FarmableItem item = DataManager.Instance.CreateItem<FarmableItem>(itemId);
         if(item == null) return false;
         bool result = plot.StartFarm(item);
         if(result)
@@ -83,7 +83,7 @@ public class GameController
     {
         Plot plot = FindPlot(plotId);
         if(plot == null || !plot.HaveProduct()) return false;
-        Item item = DataManager.Instance.CreateItem(plot.CurrentObject.Product.ToString());
+        Item item = DataManager.Instance.CreateItem(plot.CurrentItem.Product.ToString());
         if(item == null) return false;
         int amount = plot.Harvest();
         _farm.PlayerData.AddItemIntoInventory(item.Id, amount);

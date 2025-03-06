@@ -60,4 +60,10 @@ public class InputController
                 break;
         }
     }
+    public void SellItemSelected()
+    {
+        if(string.IsNullOrEmpty(_selectedItemId)) return;
+        bool result = _gameController.SellItem(_selectedItemId, _gameController.GetPlayerData().GetAmountOfItemInInventory(_selectedItemId));
+        ResetValue();
+    }
 }

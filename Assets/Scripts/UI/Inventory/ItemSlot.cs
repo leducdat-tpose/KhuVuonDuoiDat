@@ -18,6 +18,7 @@ public class ItemSlot : MonoBehaviour
     {
         _btn = GetComponent<Button>();
         _inputController = inputController;
+        
     }
     public void SetupItemSlot(string itemId, int amount)
     {

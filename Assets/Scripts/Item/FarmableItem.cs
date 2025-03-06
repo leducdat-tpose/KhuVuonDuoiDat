@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
+using UnityEngine;
+using Newtonsoft.Json;
+
 [Serializable]
-public class Animal : Item, IFarmable
+public class FarmableItem : Item, IFarmable
 {
+    
     public double GrowthDuration {get; set;}
     public ProductType Product {get; set;}
     public int AmountProduct {get;set;}
@@ -16,21 +20,19 @@ public class Animal : Item, IFarmable
         if(Enum.TryParse(rowData[0], out ItemType type))
         {
             Type = type;
-        } else Type = ItemType.Animal;
+        } else Type = ItemType.Seed;
         Id = rowData[1];
         Value = int.Parse(rowData[2]);
         GrowthDuration = float.Parse(rowData[3]);
         Product = (ProductType)Enum.Parse(typeof(ProductType), rowData[4]);
         ItemSpriteName = rowData[5];
+        AmountProduct = 0; 
+        LimitAmountProduct = 2;
     }
 
-    public void Update()
+    public void StartGrowing()
     {
-        if(AmountProduct == LimitAmountProduct) return;
-        TimeSpan span = DateTime.Now - PlantedTime;
-        if(span.TotalSeconds < GrowthDuration) return;
-        AmountProduct += 1;
-        GrowthDuration += span.TotalSeconds;
+        PlantedTime = DateTime.Now;
     }
     public int CollectProduct()
     {
@@ -40,15 +42,21 @@ public class Animal : Item, IFarmable
         return amount;
     }
     public bool IsOutOfProduct() => LimitAmountProduct == 0;
-
-    public void StartGrowing()
+    public void Update()
     {
-        PlantedTime = DateTime.Now;
+        if(AmountProduct >= LimitAmountProduct) return;
+        TimeSpan span = DateTime.Now - PlantedTime;
+        if(span.TotalSeconds < GrowthDuration) return;
+        AmountProduct += (int)(span.TotalSeconds/GrowthDuration);
+        if(AmountProduct > LimitAmountProduct) AmountProduct = LimitAmountProduct;
+        GrowthDuration += span.TotalSeconds;
     }
     public int GetTimeCountGrowth()
     {
-        if(AmountProduct == LimitAmountProduct) return 0;
+        if(AmountProduct >= LimitAmountProduct) return 0;
         TimeSpan span = DateTime.Now - PlantedTime;
+        if((int)(span.TotalSeconds/GrowthDuration) >= LimitAmountProduct) return 0;
         return (int)(GrowthDuration - span.TotalSeconds);
     }
+
 }

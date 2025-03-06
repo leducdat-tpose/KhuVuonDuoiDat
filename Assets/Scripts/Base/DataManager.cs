@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting;
 using UnityEngine;
 using Newtonsoft.Json;
+using System;
 
 public class DataManager
 {
@@ -71,10 +71,16 @@ public class DataManager
         return _playerDataManager.Load(path);
     }
 
-    public string SavePlayerData(PlayerData playerData)
+    public void SavePlayerData(PlayerData playerData)
     {
         string path = GetJsonFilePath();
-        return _playerDataManager.Save(playerData, path);
+        _playerDataManager.Save(playerData, path);
+    }
+
+    public string TestSavePlayerData(PlayerData playerData)
+    {
+        string path = GetJsonFilePath();
+        return _playerDataManager.SaveTest(playerData, path);
     }
     
     //Load sprite for item at once
@@ -126,16 +132,22 @@ public class DataManager
 
 public class PlayerDataManager
 {
-    public string Save(PlayerData data, string filePath)
+    public void Save(PlayerData data, string filePath)
     {
+        data.SetLastPlayedTime(DateTime.Now);
         string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
-        return jsonString;
-        // File.WriteAllText(filePath, jsonString);
+        File.WriteAllText(filePath, jsonString);
     }
     public PlayerData Load(string filePath)
     {
-        if(!File.Exists(filePath)) return new PlayerData();
+        if(!File.Exists(filePath)) return PlayerData.CreateAndInit();
         string jsonString = File.ReadAllText(filePath);
         return JsonConvert.DeserializeObject<PlayerData>(jsonString);
+    }
+    public string SaveTest(PlayerData data, string filePath)
+    {
+        data.SetLastPlayedTime(DateTime.Now);
+        string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
+        return jsonString;
     }
 }

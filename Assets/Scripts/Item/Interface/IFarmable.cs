@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 public interface IFarmable
 {
     public double GrowthDuration {get; set;}
@@ -10,7 +11,7 @@ public interface IFarmable
     public int LimitAmountProduct{get;set;}
     public DateTime PlantedTime{get;set;}
     public void StartGrowing();
-    public  int CollectProduct();
+    public int CollectProduct();
     public bool IsOutOfProduct();
     public void Update();
     public int GetTimeCountGrowth();

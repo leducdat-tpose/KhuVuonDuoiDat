@@ -49,29 +49,10 @@ public class UIManager : MonoBehaviour
         _inventoryPanel.transform.GetComponent<Inventory>().Initialise(_gameController, _inputController);
     }
 
-    private void GetTomato()
-    {
-        Debug.Log("Select item tomato");
-        _inputController.SelectItem("TomatoSeed");
-    }
-
     private void Update() {
         if(Input.GetKeyUp(KeyCode.B))
         {
             _gameController.BuyItem("TomatoSeed", 10);
-        }
-        if(Input.GetKeyUp(KeyCode.N))
-        {
-            _gameController.SellItem("TomatoSeed", 10);
-        }
-        if(Input.GetKeyUp(KeyCode.Tab))
-        {
-            PlayerData data = _gameController.GetPlayerData();
-            foreach(KeyValuePair<string, int> item in data.Inventory)
-            {
-                Debug.Log($"Item:{item.Key}, amount:{item.Value}");
-            }
-            Debug.Log($"Currency: {data.Currency}");
         }
     }
 

@@ -1,25 +1,39 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class PlayerData
 {
+    [JsonProperty]
     public int Currency{get; private set;}
-    public Dictionary<string, int> Inventory{get; private set;}
-    public List<Plot> Plots{get; private set;}
+    [JsonProperty]
+    public Dictionary<string, int> Inventory{get; private set;} = new Dictionary<string, int>();
+    [JsonProperty]
+    public List<Plot> Plots{get; private set;} = new List<Plot>();
+    [JsonProperty]
     public int ToolLevel{get; private set;}
-    public int HiredWorker{get;private set;}
+    [JsonProperty]
+    public int HiredWorker{get;private set;} 
+    [JsonProperty]
     public int IdleWorker{get;private set;}
-    public DateTime LastPlayedTime{get; private set;}
-    public PlayerData()
+    
+    public DateTime LastPlayedTime{get; private set;} = DateTime.Now;
+
+    public static PlayerData CreateAndInit()
+    {
+        PlayerData playerData = new PlayerData();
+        playerData.Initialise();
+        return playerData;
+    }
+
+    private void Initialise()
     {
         Currency = Constant.initCurrency;
-        Plots = new List<Plot>();
         for(int i = 0; i < Constant.initPlotCount; i++)
         {
             Plots.Add(new Plot(id: $"plot_{i}"));
         }
-        Inventory = new Dictionary<string, int>();
         ToolLevel = 2;
         HiredWorker = 4;
         IdleWorker = HiredWorker;
@@ -43,6 +57,12 @@ public class PlayerData
         return true;
     }
 
+    public int GetAmountOfItemInInventory(string id)
+    {
+        if(Inventory.TryGetValue(id, out int amount)) return amount;
+        return 0;
+    }
+
     public void AddCurrency(int amount) => Currency += amount;
 
     public bool SpendCurrency(int amount)
@@ -51,4 +71,8 @@ public class PlayerData
         Currency -= amount; return true;
     }
     public bool CanAfford(int cost) => Currency >= cost;
+    public void SetLastPlayedTime(DateTime time)
+    {
+        LastPlayedTime = time;
+    }
 }

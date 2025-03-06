@@ -28,26 +28,33 @@ public class PlotController : MonoBehaviour
     private Button _harvestBtn;
     [SerializeField]
     private TextMeshProUGUI _timeGrowthText;
-    public void InitialOwnedPlot(string Id, GameController gameController, InputController inputController)
+    public void Initialise(string Id)
+    {
+        this.Id = Id;
+        _plotRender = GetComponent<SpriteRenderer>();
+        ResetPlotController();
+    }
+    public void InitialPlot(string Id, GameController gameController, InputController inputController, bool isUnlocked = false)
     {
         Initialise(Id);
         _inputcontroller = inputController;
         _gameController = gameController;
         _gameController.OnPlotUpdated += OnPlotUpdated;
-        _harvestBtn.onClick.AddListener(() => _gameController.HarvestItem(Id));
-        
+        _harvestBtn.onClick.AddListener(() => {
+            _gameController.HarvestItem(Id);
+            SetActiveHarvestBtn(false);
+            _amountProductText.text = $"x{0}";
+        });
+        if(isUnlocked == false)
+        {
+            _plotRender.sprite = _spriteLocked;
+        }
+        else
+        {
+            _plot = _gameController.FindPlot(Id);
+            UpdateVisual(_plot);
+        }
     }
-
-    public void InitialLockedPlot(GameController gameController, InputController inputController)
-    {
-        _plotRender = GetComponent<SpriteRenderer>();
-        _plotRender.color = Color.grey;
-        _plotRender.sprite = _spriteLocked;
-        _inputcontroller = inputController;
-        gameController.OnPlotUpdated += OnPlotUpdated;
-    }
-
-
     private void Start() {
         SetActiveHarvestBtn(false);
     }
@@ -57,13 +64,6 @@ public class PlotController : MonoBehaviour
         if(plot.Id != Id) return;
         _plot = plot;
         UpdateVisual(plot);
-    }
-
-    public void Initialise(string Id)
-    {
-        this.Id = Id;
-        _plotRender = GetComponent<SpriteRenderer>();
-        ResetPlotController();
     }
     private void ResetPlotController()
     {
@@ -77,9 +77,9 @@ public class PlotController : MonoBehaviour
             _plotRender.sprite = _spriteLocked;
             return;
         }
-        if(plot.CurrentObject != null)
+        if(plot.CurrentItem != null)
         {
-            SetSpriteProduct(plot.CurrentObject);
+            SetSpriteProduct(plot.CurrentItem);
             _plotRender.sprite = _spriteHaveProduct;
         }
         else
@@ -96,9 +96,9 @@ public class PlotController : MonoBehaviour
 
     private void Update() {
         if(_plot == null) return;
-        if(_plot.CurrentObject == null) return;
-        _timeGrowthText.text = $"{_plot.CurrentObject.GetTimeCountGrowth()}s";
-        _amountProductText.text = $"x{_plot.CurrentObject.AmountProduct}";
+        if(_plot.CurrentItem == null) return;
+        _timeGrowthText.text = $"{_plot.CurrentItem.GetTimeCountGrowth()}s";
+        _amountProductText.text = $"x{_plot.CurrentItem.AmountProduct}";
         if(_plot.HaveProduct())
         {
             SetActiveHarvestBtn(true);
@@ -106,11 +106,10 @@ public class PlotController : MonoBehaviour
         else SetActiveHarvestBtn(false);
     }
 
-    private void SetSpriteProduct(IFarmable farmableItem)
+    private void SetSpriteProduct(FarmableItem farmableItem)
     {
         if(_spriteHaveProduct != null) return;
-        Item item = (Item)farmableItem;
-        _spriteHaveProduct = DataManager.Instance?.GetItemSprite(item.Id);
+        _spriteHaveProduct = DataManager.Instance?.GetItemSprite(farmableItem.Id);
     }
     private void SetActiveHarvestBtn(bool option)
     {

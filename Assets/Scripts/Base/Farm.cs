@@ -11,8 +11,8 @@ public class Farm
     public Farm()
     {
         _dataManager = DataManager.CreateAndInitialise();
-        PlayerData = new PlayerData();
-        // PlayerData = _dataManager.LoadPlayerData();
+        // PlayerData = PlayerData.CreateAndInit();
+        PlayerData = _dataManager.LoadPlayerData();
         Plots = PlayerData.Plots;
     }
 

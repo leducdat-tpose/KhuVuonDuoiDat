@@ -73,17 +73,11 @@ public class ItemDataManager
         Item item = null;
         if(Enum.TryParse(values[0], out ItemType type))
         {
-            if(type == ItemType.Seed)
+            if(type == ItemType.Seed || type == ItemType.Animal)
             {
-                Seed seed = new Seed();
-                seed.LoadData(values);
-                item = seed;
-            }
-            else if(type == ItemType.Animal)
-            {
-                Animal animal = new Animal();
-                animal.LoadData(values);
-                item = animal;
+                FarmableItem farmableItem = new FarmableItem();
+                farmableItem.LoadData(values);
+                item = farmableItem;
             }
             else if(type == ItemType.Product)
             {
