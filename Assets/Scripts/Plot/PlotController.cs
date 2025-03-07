@@ -27,6 +27,8 @@ public class PlotController : MonoBehaviour
     [SerializeField]
     private Button _harvestBtn;
     [SerializeField]
+    private Button _unlockBtn;
+    [SerializeField]
     private TextMeshProUGUI _timeGrowthText;
     public void Initialise(string Id)
     {
@@ -48,6 +50,11 @@ public class PlotController : MonoBehaviour
         if(isUnlocked == false)
         {
             _plotRender.sprite = _spriteLocked;
+            _unlockBtn.onClick.AddListener(() => {
+                bool result = _gameController.BuyPlot(Id);
+                if(result) _plotRender.sprite = _spriteEmpty;
+                OnOffUnlockBtn();
+            });
         }
         else
         {
@@ -57,6 +64,7 @@ public class PlotController : MonoBehaviour
     }
     private void Start() {
         SetActiveHarvestBtn(false);
+        _unlockBtn.gameObject.SetActive(false);
     }
 
     public void OnPlotUpdated(Plot plot)
@@ -90,7 +98,16 @@ public class PlotController : MonoBehaviour
         }
     }
     private void OnMouseDown() {
-        _inputcontroller.SelectTool(InputController.ToolType.Plant);
+        if(EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+        Debug.Log("onmousedown");
+        if(_plotRender.sprite == _spriteLocked)
+        {
+            OnOffUnlockBtn(); return;
+        }
+        _inputcontroller.SelectCommand(InputController.Command.Plant);
         _inputcontroller.SelectPlot(Id);
     }
 
@@ -115,5 +132,9 @@ public class PlotController : MonoBehaviour
     {
         if(_harvestBtn.gameObject.activeSelf == option) return;
         _harvestBtn.gameObject.SetActive(option);
+    }
+    private void OnOffUnlockBtn()
+    {
+        _unlockBtn.gameObject.SetActive(!_unlockBtn.gameObject.activeSelf);
     }
 }

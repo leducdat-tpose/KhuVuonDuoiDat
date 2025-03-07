@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject _inventoryPanel;
     [SerializeField]
+    private GameObject _storePanel;
+    [SerializeField]
     private TextMeshProUGUI _currencyText;
     [SerializeField]
     private Button _plantItemBtn;
@@ -39,14 +41,22 @@ public class UIManager : MonoBehaviour
         _gameController = gameController;
         _inputController = inputController;
         InitialiseBottomPanel();
+        InitialiseStorePanel();
     }
 
     private void InitialiseBottomPanel()
     {
-        _plantItemBtn.onClick.AddListener(() => _inputController.SelectTool(InputController.ToolType.Plant));
-        _harvestItemBtn.onClick.AddListener(() => _inputController.SelectTool(InputController.ToolType.Harvest));
+        _plantItemBtn.onClick.AddListener(() => _inputController.SelectCommand(InputController.Command.Plant));
+        _harvestItemBtn.onClick.AddListener(() => _inputController.SelectCommand(InputController.Command.Harvest));
         _inventoryBtn.onClick.AddListener(() => SetInventoryPanel(true));
         _inventoryPanel.transform.GetComponent<Inventory>().Initialise(_gameController, _inputController);
+    }
+
+    private void InitialiseStorePanel()
+    {
+        if(_inventoryPanel == null || _inventoryBtn == null) return;
+        _storePanel.GetComponent<Store>().Initialise(_gameController, _inputController);
+        _storeBtn.onClick.AddListener(() => _storePanel.gameObject.SetActive(true));
     }
 
     private void Update() {

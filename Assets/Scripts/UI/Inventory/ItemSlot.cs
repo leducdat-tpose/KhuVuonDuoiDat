@@ -25,7 +25,7 @@ public class ItemSlot : MonoBehaviour
         _item = DataManager.Instance.GetItem(itemId);
         _itemImg.sprite = DataManager.Instance.GetItemSprite(_item.Id);
         _btn.onClick.AddListener(() => _inputController.SelectItem(_item.Id));
-        _amountText.text = $"x{amount}";
+        _amountText.text = $"{amount}";
     }
 
     private void OnDisable() {
@@ -36,7 +36,7 @@ public class ItemSlot : MonoBehaviour
     {
         _itemImg.sprite = null;
         _item = null;
-        _amountText.text = $"x{0}";
+        _amountText.text = $"{0}";
         _btn.onClick.RemoveAllListeners();
     }
 }

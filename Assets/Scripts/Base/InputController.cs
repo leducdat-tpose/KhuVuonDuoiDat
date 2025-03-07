@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class InputController
 {
@@ -7,12 +8,14 @@ public class InputController
     private string _selectedPlotId;
     private string _selectedItemId;
 
-    private ToolType _toolType;
+    private Command _command;
 
-    public enum ToolType{
+    public enum Command{
         None,
         Plant,
         Harvest,
+        Buy,
+        Sell,
     }
 
     public InputController(GameController gameController)
@@ -20,43 +23,52 @@ public class InputController
         _gameController = gameController;
         _selectedItemId = null;
         _selectedPlotId = null;
-        _toolType = ToolType.None;
+        _command = Command.None;
     }
 
     public void SelectPlot(string PlotId)
     {
         _selectedPlotId = PlotId;
-        ApplyItemToPlot();
+        ProgressInput();
     }
     public void SelectItem(string itemId)
     {
         _selectedItemId = itemId;
     }
 
-    public void SelectTool(ToolType toolType)
+    public void SelectCommand(Command commandType)
     {
-        _toolType = toolType;
+        _command = commandType;
+        ProgressInput();
     }
 
-    private void ResetValue()
+    public void ResetValue()
     {
         _selectedItemId = null;
         _selectedPlotId = null;
-        _toolType = ToolType.None;
+        _command = Command.None;
     }
 
-    private void ApplyItemToPlot()
+    private void ProgressInput()
     {
         if(string.IsNullOrEmpty(_selectedItemId)) return;
-        switch (_toolType)
+        switch (_command)
         {
-            case ToolType.Plant:
+            case Command.Plant:
+                if(string.IsNullOrEmpty(_selectedPlotId)) break;
                 _gameController.PlantItem(_selectedPlotId, _selectedItemId);
                 ResetValue();
                 break;
-            case ToolType.Harvest:
+            case Command.Harvest:
+                if(string.IsNullOrEmpty(_selectedPlotId)) break;
                 _gameController.HarvestItem(_selectedPlotId);
                 ResetValue();
+                break;
+            case Command.Buy:
+                _gameController.BuyItem(_selectedItemId);
+                break;
+            case Command.Sell:
+                SellItemSelected();
                 break;
         }
     }

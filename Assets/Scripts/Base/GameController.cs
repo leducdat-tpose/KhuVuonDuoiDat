@@ -40,7 +40,16 @@ public class GameController
         return result;
     }
 
-    public bool BuyItem(string itemId, int amount)
+    public bool BuyPlot(string plotId)
+    {
+        Plot plot = _farm.BuyPlot(plotId);
+        if(plot == null) return false;
+        OnPlotUpdated?.Invoke(plot);
+        OnPlayerDataChanged?.Invoke(_farm.PlayerData);
+        return true;
+    }
+
+    public bool BuyItem(string itemId, int amount = 0)
     {
         bool result = _farm.BuyItem(itemId, amount);
         if(result)

@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         _gamecontroller.Update();
         if(Input.GetKeyUp(KeyCode.Tab))
         {
-            Debug.Log(DataManager.Instance.TestSavePlayerData(_gamecontroller.GetPlayerData()));
+            DataManager.Instance.DebugDataCSV();
         }
     }
 

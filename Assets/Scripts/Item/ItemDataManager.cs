@@ -66,6 +66,17 @@ public class ItemDataManager
         return null;
     }
 
+    public List<T> GetItems<T>() where T:Item
+    {
+        List<T> list = new List<T>();
+        foreach(Item item in itemDatabase.Values)
+        {
+            if(item is T typedItem)
+                list.Add(typedItem);
+        }
+        return list;
+    }
+
     public Item CreateItem(string id)
     {
         if(!itemData.ContainsKey(id)) return null;

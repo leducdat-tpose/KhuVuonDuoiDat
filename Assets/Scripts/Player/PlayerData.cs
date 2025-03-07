@@ -75,4 +75,23 @@ public class PlayerData
     {
         LastPlayedTime = time;
     }
+
+    public bool HavePlot(string plotId)
+    {
+        foreach(Plot plot in Plots)
+        {
+            if(plot.Id == plotId)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public bool AddPlot(Plot plot)
+    {
+        Plots.Add(plot);
+        return true;
+    }
+
 }

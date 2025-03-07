@@ -1,29 +1,46 @@
 {
-  "Currency": 300,
-  "Inventory": {
-    "TomatoSeed": 16,
-    "Tomato": 6
-  },
+  "Currency": 200,
+  "Inventory": {},
   "Plots": [
     {
       "Id": "plot_0",
-      "UnlockCost": 100.0,
+      "UnlockCost": 100,
       "isUnlocked": true,
-      "CurrentItem": {
-        "GrowthDuration": 47.565269399999991,
-        "Product": 1,
-        "AmountProduct": 2,
-        "LimitAmountProduct": 2,
-        "PlantedTime": "2025-03-06T14:48:24.2529612+07:00",
-        "Id": "TomatoSeed",
-        "ItemSpriteName": "tomato",
-        "Type": 0,
-        "Value": 10
-      }
+      "CurrentItem": null
+    },
+    {
+      "Id": "plot_1",
+      "UnlockCost": 100,
+      "isUnlocked": true,
+      "CurrentItem": null
+    },
+    {
+      "Id": "plot_2",
+      "UnlockCost": 100,
+      "isUnlocked": true,
+      "CurrentItem": null
+    },
+    {
+      "Id": "plot_3",
+      "UnlockCost": 100,
+      "isUnlocked": true,
+      "CurrentItem": null
+    },
+    {
+      "Id": "plot_4",
+      "UnlockCost": 100,
+      "isUnlocked": true,
+      "CurrentItem": null
+    },
+    {
+      "Id": "plot_5",
+      "UnlockCost": 100,
+      "isUnlocked": true,
+      "CurrentItem": null
     }
   ],
   "ToolLevel": 2,
   "HiredWorker": 4,
   "IdleWorker": 4,
-  "LastPlayedTime": "2025-03-06T14:49:01.5323263+07:00"
+  "LastPlayedTime": "2025-03-07T09:34:37.1882897+07:00"
 }

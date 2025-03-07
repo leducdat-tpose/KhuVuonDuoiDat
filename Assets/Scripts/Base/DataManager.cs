@@ -104,6 +104,8 @@ public class DataManager
     public T GetItem<T>(string itemId) where T: Item
     => _itemDataManager.GetItem<T>(itemId);
 
+    public List<T> GetItems<T>() where T: Item
+    => _itemDataManager.GetItems<T>();
 
     public Sprite GetItemSprite(string itemId)
     {
@@ -122,6 +124,7 @@ public class DataManager
         var database = _itemDataManager.GetItemDatabase();
         foreach(KeyValuePair<string, Item> item in database)
         {
+            Debug.Log(item.GetType());
             Debug.Log($"Item name:{item.Key}, item:{item.Value}");
             Debug.Log($"Sprite: {GetItemSprite(item.Key)}");
             Debug.Log($"Type: {item.Value.Type}");

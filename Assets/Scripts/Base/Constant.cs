@@ -13,6 +13,8 @@ public static class Constant
     public static readonly string PlantSprite = "Sprite/smallplant";
     public static readonly int initPlotCount = 1;
 
+    public static readonly int numSeedBuy = 10;
+    public static readonly int numAnimalBuy = 1;
     public static readonly int MaxPlotCount = 9;
     public static readonly int initCurrency = 500;
 }

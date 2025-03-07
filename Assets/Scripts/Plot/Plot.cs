@@ -10,7 +10,7 @@ public class Plot
     [JsonProperty]
     public string Id;
     [JsonProperty]
-    public float UnlockCost;
+    public int UnlockCost;
     [JsonProperty]
     public bool isUnlocked;
     [JsonProperty]
@@ -53,4 +53,5 @@ public class Plot
         if(CurrentItem.AmountProduct == 0) return false;
         return true;
     }
+    public void UnlockPlot() => isUnlocked = true;
 }

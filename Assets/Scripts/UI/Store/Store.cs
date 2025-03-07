@@ -1,18 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Inventory : MonoBehaviour
+public class Store : MonoBehaviour
 {
     [SerializeField]
     private Button _closeBtn;
     [SerializeField]
-    private Button _useBtn;
-    [SerializeField]
-    private Button _sellBtn;
+    private Button _buyBtn;
     private GameController _gameController;
-    private PlayerData _playerData;
     private InputController _inputController;
     [SerializeField]
     private GameObject _gridPanel;
@@ -23,13 +21,10 @@ public class Inventory : MonoBehaviour
         _inputController = inputController;
         _closeBtn.onClick.AddListener(() => {
             this.transform.gameObject.SetActive(false);
-            _inputController.SelectItem(null);
+            _inputController.ResetValue();
         });
-        _useBtn.onClick.AddListener(() => this.transform.gameObject.SetActive(false));
-        _sellBtn.onClick.AddListener(() =>{
-            _inputController.SelectCommand(InputController.Command.Sell);
-            ResetItemSlot();
-            SetupItemSlot();
+        _buyBtn.onClick.AddListener(() =>{
+            _inputController.SelectCommand(InputController.Command.Buy);
         });
         foreach(Transform transform in _gridPanel.transform)
         {
@@ -40,20 +35,18 @@ public class Inventory : MonoBehaviour
                 slot.gameObject.SetActive(false);
             }
         }
-        _playerData = _gameController.GetPlayerData();
     }
-
     private void SetupItemSlot()
     {
         int i = 0;
-        foreach(KeyValuePair<string, int> item in _playerData.Inventory)
+        List<FarmableItem> listItem = DataManager.Instance.GetItems<FarmableItem>();
+        foreach(FarmableItem item in listItem)
         {
             _itemSlots[i].gameObject.SetActive(true);
-            _itemSlots[i].SetupItemSlot(item.Key, item.Value);
+            _itemSlots[i].SetupItemSlot(item.Id, item.Value);
             i++;
         }
     }
-
     private void ResetItemSlot()
     {
         foreach(ItemSlot slot in _itemSlots)
@@ -62,12 +55,11 @@ public class Inventory : MonoBehaviour
             slot.gameObject.SetActive(false);
         }
     }
-
     private void OnEnable() {
         SetupItemSlot();
+        _inputController.SelectCommand(InputController.Command.Buy);
     }
     private void OnDisable() {
         ResetItemSlot();
     }
-
 }
