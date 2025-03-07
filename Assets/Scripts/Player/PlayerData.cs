@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 
 public class PlayerData
 {
@@ -14,9 +15,7 @@ public class PlayerData
     [JsonProperty]
     public int ToolLevel{get; private set;}
     [JsonProperty]
-    public int HiredWorker{get;private set;} 
-    [JsonProperty]
-    public int IdleWorker{get;private set;}
+    public int NumHiredWorker{get;private set;}
     
     public DateTime LastPlayedTime{get; private set;} = DateTime.Now;
 
@@ -30,13 +29,12 @@ public class PlayerData
     private void Initialise()
     {
         Currency = Constant.initCurrency;
-        for(int i = 0; i < Constant.initPlotCount; i++)
+        for(int i = 0; i < Constant.InitNumPlot; i++)
         {
             Plots.Add(new Plot(id: $"plot_{i}"));
         }
         ToolLevel = 2;
-        HiredWorker = 4;
-        IdleWorker = HiredWorker;
+        NumHiredWorker = 4;
     }
 
     public void AddItemIntoInventory(string id, int amount)
@@ -75,7 +73,6 @@ public class PlayerData
     {
         LastPlayedTime = time;
     }
-
     public bool HavePlot(string plotId)
     {
         foreach(Plot plot in Plots)

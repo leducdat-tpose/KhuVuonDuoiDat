@@ -80,7 +80,7 @@ public class UIManager : MonoBehaviour
         if(_currencyText != null) _currencyText.text = $"Currency: {playerData.Currency}";
         if(_workerCountPanel != null)
         {
-            _workerCountPanel.GetComponentInChildren<TextMeshProUGUI>().text = $"{playerData.IdleWorker}/{playerData.HiredWorker}";
+            _workerCountPanel.GetComponentInChildren<TextMeshProUGUI>().text = $"{playerData.NumHiredWorker}/{playerData.NumHiredWorker}";
         }
         if(_plotCountPanel != null)
         {
@@ -105,15 +105,4 @@ public class UIManager : MonoBehaviour
     {
         _inventoryPanel.SetActive(option);
     }
-
-    // private void OnGUI() {
-    //     if(GUI.Button(new Rect(10, 10, 70, 30), "Test 1"))
-    //     {
-    //         TestFunc1();
-    //     }
-    //     if(GUI.Button(new Rect(10, 40, 70, 30), "Test 2"))
-    //     {
-    //         TestFunc2();
-    //     }
-    // }
 }

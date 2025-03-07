@@ -15,7 +15,6 @@ public class Plot
     public bool isUnlocked;
     [JsonProperty]
     public FarmableItem CurrentItem;
-
     public Plot(string id)
     {
         Id = id;

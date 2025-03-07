@@ -9,6 +9,8 @@ public class DataManager
 {
     public static DataManager Instance {get; private set;}
 
+    public PlayerData PlayerData{get; private set;}
+
     private DataManager(){
         Instance = this;
     }
@@ -68,7 +70,8 @@ public class DataManager
     public PlayerData LoadPlayerData()
     {
         string path = GetJsonFilePath();
-        return _playerDataManager.Load(path);
+        PlayerData = _playerDataManager.Load(path);
+        return PlayerData;
     }
 
     public void SavePlayerData(PlayerData playerData)
@@ -130,6 +133,8 @@ public class DataManager
             Debug.Log($"Type: {item.Value.Type}");
         }
     }
+    public void SetPlayerData(PlayerData playerData)
+    => PlayerData = playerData;
 }
 
 

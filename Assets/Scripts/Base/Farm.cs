@@ -5,6 +5,7 @@ using System.IO;
 public class Farm
 {
     public List<Plot> Plots{get;private set;}
+    
     public PlayerData PlayerData{get;private set;}
     private DataManager _dataManager;
     public Farm()
@@ -12,6 +13,7 @@ public class Farm
         _dataManager = DataManager.CreateAndInitialise();
         // PlayerData = PlayerData.CreateAndInit();
         PlayerData = _dataManager.LoadPlayerData();
+        _dataManager.SetPlayerData(PlayerData);
         Plots = PlayerData.Plots;
     }
 

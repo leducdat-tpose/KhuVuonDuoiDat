@@ -5,17 +5,25 @@ using System.Linq;
 public class GameController
 {
     private Farm _farm;
-
+    public List<Worker> Workers{get; private set;} = new List<Worker>();
     public event Action<Plot> OnPlotUpdated;
     public event Action<PlayerData> OnPlayerDataChanged;
     public GameController()
     {
         _farm = new Farm();
+        for(int i = 0; i < _farm.PlayerData.NumHiredWorker; i++)
+        {
+            Workers.Add(Worker.CreateAndInit(this));
+        }
     }
     
     public void Update()
     {
         _farm.Update();
+        foreach(Worker worker in Workers)
+        {
+            worker.Update();
+        }
     }
 
     public List<Plot> GetAllPlots() => _farm.Plots;
@@ -82,12 +90,32 @@ public class GameController
         if(result)
         {
             _farm.PlayerData.RemoveItemInInventory(itemId, 1);
+            AssignWorkerWork(plot);
             OnPlotUpdated?.Invoke(plot);
             OnPlayerDataChanged?.Invoke(_farm.PlayerData);
         }
         return result;
     }
-
+    public void AssignWorkerWork(Plot plot)
+    {
+        foreach(Worker worker in Workers)
+        {
+            if(worker.CurrentState == Worker.WorkingState.Idle)
+            {
+                worker.StartWorking(plot); break;
+            }
+        }
+    }
+    public void AssignWorkerStopWork(Plot plot)
+    {
+        foreach(Worker worker in Workers)
+        {
+            if(worker.CurrentPlot == plot)
+            {
+                worker.StopWorking(); break;
+            }
+        }
+    }
     public bool HarvestItem(string plotId)
     {
         Plot plot = FindPlot(plotId);

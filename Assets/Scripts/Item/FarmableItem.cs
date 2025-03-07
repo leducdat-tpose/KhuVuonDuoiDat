@@ -29,9 +29,10 @@ public class FarmableItem : Item, IFarmable
         AmountProduct = 0; 
         LimitAmountProduct = 2;
     }
-
     public void StartGrowing()
     {
+        var toolLevel = DataManager.Instance.PlayerData.ToolLevel;
+        GrowthDuration *= (double)(1 - ((toolLevel - 1) * Constant.ToolEfficient));
         PlantedTime = DateTime.Now;
     }
     public int CollectProduct()
