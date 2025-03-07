@@ -1,24 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using UnityEngine;
 using Newtonsoft.Json;
+
 [Serializable]
 public class Plot
 {
     [JsonProperty]
-    public string Id;
+    public string Id{get; private set;}
     [JsonProperty]
-    public int UnlockCost;
+    public int UnlockCost{get; private set;}
     [JsonProperty]
-    public bool isUnlocked;
+    public bool isUnlocked{get; private set;}
     [JsonProperty]
-    public FarmableItem CurrentItem;
+    public FarmableItem CurrentItem{get; private set;}
     public Plot(string id)
     {
         Id = id;
-        UnlockCost = 100;
+        UnlockCost = Constant.PayValueUnlockPlot;
         isUnlocked = true;
         CurrentItem = null;
     }

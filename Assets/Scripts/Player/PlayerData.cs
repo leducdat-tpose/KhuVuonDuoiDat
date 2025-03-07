@@ -33,8 +33,17 @@ public class PlayerData
         {
             Plots.Add(new Plot(id: $"plot_{i}"));
         }
-        ToolLevel = 2;
-        NumHiredWorker = 4;
+        AddItemIntoInventory("TomatoSeed", 10);
+        AddItemIntoInventory("BlueberrySeed", 10);
+        AddItemIntoInventory("Cow", 2);
+        // AddItemIntoInventory("Milk", 2);
+        // AddItemIntoInventory("StrawberrySeed", 2);
+        // AddItemIntoInventory("Strawberry", 2);
+        // AddItemIntoInventory("Tomato", 2);
+        // AddItemIntoInventory("Blueberry", 2);
+
+        ToolLevel = Constant.InitToolLevel;
+        NumHiredWorker = Constant.InitNumWorker;
     }
 
     public void AddItemIntoInventory(string id, int amount)
@@ -89,6 +98,14 @@ public class PlayerData
     {
         Plots.Add(plot);
         return true;
+    }
+    public void HireWorker()
+    {
+        NumHiredWorker++;
+    }
+    public void UpgradeTool()
+    {
+        ToolLevel++;
     }
 
 }

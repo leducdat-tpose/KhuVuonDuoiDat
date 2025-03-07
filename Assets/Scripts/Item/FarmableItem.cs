@@ -27,7 +27,7 @@ public class FarmableItem : Item, IFarmable
         Product = (ProductType)Enum.Parse(typeof(ProductType), rowData[4]);
         ItemSpriteName = rowData[5];
         AmountProduct = 0; 
-        LimitAmountProduct = 2;
+        LimitAmountProduct = int.Parse(rowData[6]);
     }
     public void StartGrowing()
     {

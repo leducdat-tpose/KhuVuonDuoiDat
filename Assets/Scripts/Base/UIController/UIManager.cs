@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
     private GameController _gameController;
     private InputController _inputController;
 
-    [Header("References")]
+    [Header("Panel")]
     [SerializeField]
     private GameObject _currencyPanel;
     [SerializeField]
@@ -23,64 +23,73 @@ public class UIManager : MonoBehaviour
     private GameObject _inventoryPanel;
     [SerializeField]
     private GameObject _storePanel;
-    [SerializeField]
-    private TextMeshProUGUI _currencyText;
+    [Header("Button")]
     [SerializeField]
     private Button _plantItemBtn;
     [SerializeField]
-    private Button _harvestItemBtn;
+    private Button _upHireWorkerBtn;
+    [SerializeField]
+    private Button _upToolLvlBtn;
     [SerializeField]
     private Button _storeBtn;
     [SerializeField]
     private Button _inventoryBtn;
-    [SerializeField]
-    private Button _closeInvenBtn;
 
     public void Initialise(GameController gameController, InputController inputController)
     {
         _gameController = gameController;
         _inputController = inputController;
+        InitialiseTopPanel();
         InitialiseBottomPanel();
         InitialiseStorePanel();
+        InitialiseInventoryPanel();
+    }
+
+    private void InitialiseTopPanel()
+    {
+        _upHireWorkerBtn.onClick.AddListener(() => {
+            _gameController.HireWorker();
+            UpgradeTopPanel();
+        });
+        _upToolLvlBtn.onClick.AddListener(() => _gameController.UpgradeTool());
     }
 
     private void InitialiseBottomPanel()
     {
         _plantItemBtn.onClick.AddListener(() => _inputController.SelectCommand(InputController.Command.Plant));
-        _harvestItemBtn.onClick.AddListener(() => _inputController.SelectCommand(InputController.Command.Harvest));
-        _inventoryBtn.onClick.AddListener(() => SetInventoryPanel(true));
+    }
+
+    private void InitialiseInventoryPanel()
+    {
+        if(_inventoryBtn == null || _inventoryPanel == null) return;
         _inventoryPanel.transform.GetComponent<Inventory>().Initialise(_gameController, _inputController);
+        _inventoryBtn.onClick.AddListener(() => _inventoryPanel.gameObject.SetActive(true));
+        _inventoryPanel.SetActive(false);
     }
 
     private void InitialiseStorePanel()
     {
-        if(_inventoryPanel == null || _inventoryBtn == null) return;
+        if(_storePanel == null || _storeBtn == null) return;
         _storePanel.GetComponent<Store>().Initialise(_gameController, _inputController);
         _storeBtn.onClick.AddListener(() => _storePanel.gameObject.SetActive(true));
-    }
-
-    private void Update() {
-        if(Input.GetKeyUp(KeyCode.B))
-        {
-            _gameController.BuyItem("TomatoSeed", 10);
-        }
+        _storePanel.SetActive(false);
     }
 
     public void UpdateAll()
     {
-        if(_currencyPanel != null)
-        {
-            UpdateCurrencyPanel();
-        }
+        UpgradeTopPanel();
     }
 
-    public void UpdateCurrencyPanel()
+    public void UpgradeTopPanel()
     {
         PlayerData playerData = _gameController.GetPlayerData();
-        if(_currencyText != null) _currencyText.text = $"Currency: {playerData.Currency}";
+        if(_currencyPanel != null)
+        {
+            _currencyPanel.GetComponentInChildren<TextMeshProUGUI>().text = $"Currency: {playerData.Currency}";
+        }
         if(_workerCountPanel != null)
         {
-            _workerCountPanel.GetComponentInChildren<TextMeshProUGUI>().text = $"{playerData.NumHiredWorker}/{playerData.NumHiredWorker}";
+            _workerCountPanel.GetComponentInChildren<TextMeshProUGUI>().text = $"Worker: {_gameController.GetNumIdleWorker()}/{playerData.NumHiredWorker}";
         }
         if(_plotCountPanel != null)
         {
@@ -90,19 +99,5 @@ public class UIManager : MonoBehaviour
         {
             _toolLevelPanel.GetComponentInChildren<TextMeshProUGUI>().text = $"Lvl.{playerData.ToolLevel}";
         }
-    }
-
-    private void OnBuyItemBtn(string itemId)
-    {
-        _gameController.BuyItem(itemId, 10);
-    }
-    private void OnSellItemBtn(string itemId)
-    {
-        _gameController.SellItem(itemId, 1);
-    }
-
-    private void SetInventoryPanel(bool option)
-    {
-        _inventoryPanel.SetActive(option);
     }
 }

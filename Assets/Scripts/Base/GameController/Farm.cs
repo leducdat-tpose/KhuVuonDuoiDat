@@ -57,6 +57,19 @@ public class Farm
         return plot;
     }
 
+    public bool HireWorker()
+    {
+        if(!PlayerData.SpendCurrency(Constant.PayValueForWorker)) return false;
+        PlayerData.HireWorker();
+        return true;
+    }
+    public bool UpgradeTool()
+    {
+        if(!PlayerData.SpendCurrency(Constant.PayValueUpgradeTool)) return false;
+        PlayerData.UpgradeTool();
+        return true;
+    }
+
     public void Update(){
         foreach(Plot plot in Plots) plot.Update();
     }

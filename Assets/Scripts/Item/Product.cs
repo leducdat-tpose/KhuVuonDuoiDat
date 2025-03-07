@@ -8,6 +8,7 @@ public enum ProductType{
     None,
     Tomato,
     Blueberry,
+    Strawberry,
     Milk,
 }
 [Serializable]

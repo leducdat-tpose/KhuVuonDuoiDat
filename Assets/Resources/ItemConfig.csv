@@ -1,0 +1,9 @@
+Type,Name,Value,DurationProgress,Product,SpriteName,LimitAmountProduct
+0,TomatoSeed,3,600,Tomato,tomatoseed,40
+0,BlueberrySeed,5,900,Blueberry,blueberryseed,40
+0,StrawberrySeed,40,300,Strawberry,strawberryseed,20
+1,Cow,100,1800,Milk,cow,100
+2,Tomato,5,0,None,tomato,0
+2,Milk,15,0,None,milk,0
+2,Blueberry,8,0,None,blueberry,0
+2,Strawberry,45,0,None,strawberry,0

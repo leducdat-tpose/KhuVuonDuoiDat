@@ -36,8 +36,8 @@ public class DataManager
     {
         string path;
         if(Application.isEditor||Debug.isDebugBuild)
-            path = Path.Combine(Application.dataPath, "Resources", Constant.csvFileName);
-        else path = Path.Combine(Application.streamingAssetsPath, "Data", Constant.csvFileName);
+            path = Path.Combine(Application.dataPath, "Resources", Constant.FileItemConfig);
+        else path = Path.Combine(Application.streamingAssetsPath, "Data", Constant.FileItemConfig);
         //In window, Path.Combine use backslashes (\) as path separators
         //While other OS, use forward slashes (/).
         path = path.Replace("/", "\\");
@@ -135,27 +135,4 @@ public class DataManager
     }
     public void SetPlayerData(PlayerData playerData)
     => PlayerData = playerData;
-}
-
-
-public class PlayerDataManager
-{
-    public void Save(PlayerData data, string filePath)
-    {
-        data.SetLastPlayedTime(DateTime.Now);
-        string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
-        File.WriteAllText(filePath, jsonString);
-    }
-    public PlayerData Load(string filePath)
-    {
-        if(!File.Exists(filePath)) return PlayerData.CreateAndInit();
-        string jsonString = File.ReadAllText(filePath);
-        return JsonConvert.DeserializeObject<PlayerData>(jsonString);
-    }
-    public string SaveTest(PlayerData data, string filePath)
-    {
-        data.SetLastPlayedTime(DateTime.Now);
-        string jsonString = JsonConvert.SerializeObject(data, Formatting.Indented);
-        return jsonString;
-    }
 }

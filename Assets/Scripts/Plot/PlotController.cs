@@ -85,6 +85,8 @@ public class PlotController : MonoBehaviour
             _plotRender.sprite = _spriteLocked;
             return;
         }
+        if(_gameController.FindWorker(plot)) _workerProductText.text = "x1";
+        else _workerProductText.text = "x0";
         if(plot.CurrentItem != null)
         {
             SetSpriteProduct(plot.CurrentItem);
@@ -102,7 +104,6 @@ public class PlotController : MonoBehaviour
         {
             return;
         }
-        Debug.Log("onmousedown");
         if(_plotRender.sprite == _spriteLocked)
         {
             OnOffUnlockBtn(); return;
@@ -113,7 +114,12 @@ public class PlotController : MonoBehaviour
 
     private void Update() {
         if(_plot == null) return;
-        if(_plot.CurrentItem == null) return;
+        if(_plot.CurrentItem == null)
+        {
+            SetActiveHarvestBtn(false);
+            _amountProductText.text = $"x{0}";
+            return;
+        }
         _timeGrowthText.text = $"{_plot.CurrentItem.GetTimeCountGrowth()}s";
         _amountProductText.text = $"x{_plot.CurrentItem.AmountProduct}";
         if(_plot.HaveProduct())

@@ -94,5 +94,6 @@ public class Worker
         CurrentPlot = null;
         CurrentItem = null;
         itemId = "";
+        _gameController.ResetAllVisualPlot();
     }
 }

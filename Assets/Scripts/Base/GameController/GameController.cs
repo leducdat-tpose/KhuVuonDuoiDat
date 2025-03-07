@@ -35,6 +35,7 @@ public class GameController
     {
         Plot plot = FindPlot(plotId);
         if(plot == null) return false;
+        if(!_farm.PlayerData.Inventory.ContainsKey(itemId)) return false;
         if(_farm.PlayerData.Inventory[itemId] <= 0) return false;
         T item = DataManager.Instance.CreateItem<T>(itemId);
         if(item == null) return false;
@@ -77,12 +78,49 @@ public class GameController
         return result;
     }
 
+    public bool HireWorker()
+    {
+        bool result = _farm.HireWorker();
+        Workers.Add(Worker.CreateAndInit(this));
+        if(result)
+        {
+            OnPlayerDataChanged?.Invoke(_farm.PlayerData);
+        }
+        return result;
+    }
+    public bool UpgradeTool()
+    {
+        bool result = _farm.UpgradeTool();
+        if(result)
+        {
+            OnPlayerDataChanged?.Invoke(_farm.PlayerData);
+        }
+        return result;
+    }
+    public int GetNumIdleWorker()
+    {
+        int count = 0;
+        foreach(Worker worker in Workers)
+        {
+            if(worker.CurrentState == Worker.WorkingState.Idle) count++;
+        }
+        return count;
+    }
+    public bool FindWorker(Plot plot)
+    {
+        foreach(Worker worker in Workers)
+        {
+            if(worker.CurrentPlot == plot) return true;
+        }
+        return false;
+    }
     public PlayerData GetPlayerData() => _farm.PlayerData;
 
     public bool PlantItem(string plotId, string itemId)
     {
         Plot plot = FindPlot(plotId);
         if(plot == null) return false;
+        if(!_farm.PlayerData.Inventory.ContainsKey(itemId)) return false;
         if(_farm.PlayerData.Inventory[itemId] <= 0) return false;
         FarmableItem item = DataManager.Instance.CreateItem<FarmableItem>(itemId);
         if(item == null) return false;
@@ -128,5 +166,12 @@ public class GameController
         OnPlayerDataChanged?.Invoke(_farm.PlayerData);
         return true;
     }
-
+    public void ResetAllVisualPlot()
+    {
+        OnPlayerDataChanged?.Invoke(GetPlayerData());
+        foreach(Plot plot in GetPlayerData().Plots)
+        {
+            OnPlotUpdated?.Invoke(plot);
+        }
+    }
 }
